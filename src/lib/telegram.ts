@@ -1,3 +1,16 @@
+const warsawDateTime: Intl.DateTimeFormatOptions = {
+  timeZone: "Europe/Warsaw",
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+};
+
+function formatWarsaw(iso: string) {
+  return new Date(iso).toLocaleString("pl-PL", warsawDateTime);
+}
+
 export async function sendTelegramNotification(message: string) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -51,11 +64,11 @@ export function formatBookingTelegramMessage({
     cancelled: "❌ Odwołany booking",
   };
 
-  const start = new Date(startAt).toLocaleString("pl-PL");
-  const end = new Date(endAt).toLocaleString("pl-PL");
+  const start = formatWarsaw(startAt);
+  const end = formatWarsaw(endAt);
   const previous =
     previousStartAt && previousEndAt
-      ? `${new Date(previousStartAt).toLocaleString("pl-PL")} → ${new Date(previousEndAt).toLocaleString("pl-PL")}`
+      ? `${formatWarsaw(previousStartAt)} → ${formatWarsaw(previousEndAt)}`
       : null;
 
   return [
