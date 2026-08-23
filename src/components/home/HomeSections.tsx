@@ -65,9 +65,15 @@ export function HomeCta() {
           na Tęczowej 23 we Wrocławiu.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <Link
+            href="/booking"
+            className="inline-flex border border-white bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-black transition-colors hover:bg-zinc-200"
+          >
+            Booking
+          </Link>
           <a
             href="mailto:kontakt@1take.records"
-            className="inline-flex border border-white bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-black transition-colors hover:bg-zinc-200"
+            className="inline-flex border border-white/20 px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50"
           >
             Napisz do nas
           </a>

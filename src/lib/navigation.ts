@@ -10,6 +10,7 @@ export const siteConfig = {
 } as const;
 
 export const navLinks = [
+  { href: "/booking", label: "Booking" },
   { href: "/artysci", label: "Nasi artyści" },
   { href: "/inzynierowie", label: "Nasi inżynierowie" },
   { href: "/beatmakerzy", label: "Nasi beatmakerzy" },

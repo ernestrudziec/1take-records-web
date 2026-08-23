@@ -82,8 +82,15 @@ export function HomeHero() {
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <Link
             data-hero-cta
-            href="/studio"
+            href="/booking"
             className="inline-flex items-center border border-white bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-black transition-colors hover:bg-zinc-200"
+          >
+            Booking
+          </Link>
+          <Link
+            data-hero-cta
+            href="/studio"
+            className="inline-flex items-center border border-white/20 px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50"
           >
             Nasze studio
           </Link>

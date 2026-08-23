@@ -29,3 +29,48 @@ body {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
 }
+
+.booking-calendar .rbc-calendar {
+  color: #fafafa;
+  font-family: var(--font-montserrat), system-ui, sans-serif;
+}
+
+.booking-calendar .rbc-toolbar button {
+  color: #fafafa;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #09090b;
+}
+
+.booking-calendar .rbc-toolbar button:hover,
+.booking-calendar .rbc-toolbar button.rbc-active {
+  background: #18181b;
+  color: #fff;
+}
+
+.booking-calendar .rbc-header,
+.booking-calendar .rbc-time-header-content,
+.booking-calendar .rbc-time-content,
+.booking-calendar .rbc-day-bg,
+.booking-calendar .rbc-month-row,
+.booking-calendar .rbc-time-view,
+.booking-calendar .rbc-month-view {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.booking-calendar .rbc-off-range-bg {
+  background: #050505;
+}
+
+.booking-calendar .rbc-today {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.booking-calendar .rbc-time-slot,
+.booking-calendar .rbc-time-header-gutter,
+.booking-calendar .rbc-label {
+  color: #71717a;
+}
+
+.booking-calendar .rbc-event {
+  border-radius: 0;
+}
