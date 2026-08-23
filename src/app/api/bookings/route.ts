@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { getCurrentProfile, isAdminProfile } from "@/lib/booking/auth";
+import { getCurrentProfile } from "@/lib/booking/auth";
 import type { BookingInput } from "@/lib/booking/types";
+import { logBookingEvent } from "@/lib/booking/utils";
 import { createClient } from "@/lib/supabase/server";
 import {
   formatBookingTelegramMessage,
@@ -81,10 +82,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  await logBookingEvent(supabase, {
+    booking: data,
+    actorId: profile.id,
+    eventType: "created",
+  });
+
   await sendTelegramNotification(
     formatBookingTelegramMessage({
       action: "created",
       userName: profile.display_name,
+      actorName: profile.display_name,
       startAt: data.start_at,
       endAt: data.end_at,
       notes: data.notes,

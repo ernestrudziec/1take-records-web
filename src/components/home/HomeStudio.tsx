@@ -35,7 +35,7 @@ const features = [
 
 export function HomeStudio() {
   return (
-    <section id="studio" className="border-t border-white/10 px-6 py-20 scroll-mt-8">
+    <section id="studio" className="scroll-mt-8 border-t border-white/10 px-5 py-14 sm:px-6 sm:py-20">
       <SectionHeading
         eyebrow="Studio"
         title="Nasze studio"
@@ -46,7 +46,7 @@ export function HomeStudio() {
         {features.map((feature) => (
           <article
             key={feature.title}
-            className="border border-white/10 bg-zinc-950 p-8 text-center"
+            className="border border-white/10 bg-zinc-950 p-6 text-center sm:p-8"
           >
             <div className="mx-auto flex h-12 w-12 items-center justify-center border border-white/10 bg-black">
               <feature.icon className="h-5 w-5 text-white" strokeWidth={1.5} />

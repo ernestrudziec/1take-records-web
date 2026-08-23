@@ -1,0 +1,15 @@
+---
+description: Always commit and push completed work in this repo
+alwaysApply: true
+---
+
+# Git sync (this project only)
+
+After finishing work here, **always commit and push** to the tracked remote branch. Do not leave completed changes only on Vercel or the working tree.
+
+- Commit when a feature, fix, or config change is done — do not wait to be asked.
+- Push to `origin` with `-u` if the branch has no upstream.
+- Never commit `.env`, `.env.local`, tokens, or secrets.
+- No Cursor / Co-authored-by attribution.
+- Never force-push `main`/`master`.
+- If commit hooks fail, fix and make a **new** commit (do not amend a rejected one).

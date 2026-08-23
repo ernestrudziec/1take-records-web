@@ -29,14 +29,20 @@ export async function sendTelegramNotification(message: string) {
 export function formatBookingTelegramMessage({
   action,
   userName,
+  actorName,
   startAt,
   endAt,
+  previousStartAt,
+  previousEndAt,
   notes,
 }: {
   action: "created" | "updated" | "cancelled";
   userName: string;
+  actorName?: string;
   startAt: string;
   endAt: string;
+  previousStartAt?: string;
+  previousEndAt?: string;
   notes?: string | null;
 }) {
   const labels = {
@@ -47,10 +53,16 @@ export function formatBookingTelegramMessage({
 
   const start = new Date(startAt).toLocaleString("pl-PL");
   const end = new Date(endAt).toLocaleString("pl-PL");
+  const previous =
+    previousStartAt && previousEndAt
+      ? `${new Date(previousStartAt).toLocaleString("pl-PL")} → ${new Date(previousEndAt).toLocaleString("pl-PL")}`
+      : null;
 
   return [
     `<b>${labels[action]}</b>`,
     `👤 ${userName}`,
+    actorName && actorName !== userName ? `🛠️ Zmienił: ${actorName}` : null,
+    previous ? `↩️ Było: ${previous}` : null,
     `🕐 ${start} → ${end}`,
     notes ? `📝 ${notes}` : null,
     `📍 1take.records — Tęczowa 23, Wrocław`,

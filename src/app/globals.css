@@ -30,31 +30,104 @@ body {
   color: #fff;
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.32);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 .booking-calendar .rbc-calendar {
   color: #fafafa;
   font-family: var(--font-montserrat), system-ui, sans-serif;
 }
 
+.booking-calendar .rbc-toolbar {
+  margin-bottom: 1rem;
+  gap: 0.75rem;
+}
+
 .booking-calendar .rbc-toolbar button {
-  color: #fafafa;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #d4d4d8;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   background: #09090b;
+  border-radius: 0.7rem;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
 }
 
 .booking-calendar .rbc-toolbar button:hover,
 .booking-calendar .rbc-toolbar button.rbc-active {
-  background: #18181b;
-  color: #fff;
+  background: #fff;
+  color: #000;
+  border-color: #fff;
 }
 
+.booking-calendar .rbc-toolbar-label {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.booking-calendar .rbc-time-view,
+.booking-calendar .rbc-month-view,
 .booking-calendar .rbc-header,
+.booking-calendar .rbc-header + .rbc-header,
+.booking-calendar .rbc-time-header,
 .booking-calendar .rbc-time-header-content,
 .booking-calendar .rbc-time-content,
+.booking-calendar .rbc-time-content > * + * > *,
 .booking-calendar .rbc-day-bg,
+.booking-calendar .rbc-day-bg + .rbc-day-bg,
 .booking-calendar .rbc-month-row,
-.booking-calendar .rbc-time-view,
-.booking-calendar .rbc-month-view {
-  border-color: rgba(255, 255, 255, 0.1);
+.booking-calendar .rbc-month-row + .rbc-month-row,
+.booking-calendar .rbc-day-slot,
+.booking-calendar .rbc-timeslot-group,
+.booking-calendar .rbc-time-gutter,
+.booking-calendar .rbc-time-header-gutter,
+.booking-calendar .rbc-allday-cell,
+.booking-calendar .rbc-row-bg,
+.booking-calendar .rbc-time-header.rbc-overflowing,
+.booking-calendar .rbc-rtl .rbc-time-content > * + * > * {
+  border-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.booking-calendar .rbc-timeslot-group {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+.booking-calendar .rbc-time-slot {
+  border-top: 1px solid rgba(255, 255, 255, 0.012) !important;
+}
+
+.booking-calendar .rbc-time-content > * + * > *,
+.booking-calendar .rbc-day-slot,
+.booking-calendar .rbc-header + .rbc-header {
+  border-left: 1px solid rgba(255, 255, 255, 0.025) !important;
 }
 
 .booking-calendar .rbc-off-range-bg {
@@ -62,7 +135,7 @@ body {
 }
 
 .booking-calendar .rbc-today {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.045);
 }
 
 .booking-calendar .rbc-time-slot,
@@ -72,5 +145,73 @@ body {
 }
 
 .booking-calendar .rbc-event {
-  border-radius: 0;
+  border-radius: 10px;
+}
+
+.booking-calendar .rbc-event-label {
+  display: none;
+}
+
+.booking-calendar .rbc-event-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.booking-calendar .rbc-addons-dnd .rbc-addons-dnd-resizable {
+  border-radius: 10px;
+}
+
+.booking-calendar .rbc-slot-selection {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+.booking-calendar .rbc-current-time-indicator {
+  background-color: #fff;
+}
+
+.booking-calendar .rbc-time-content {
+  scrollbar-gutter: stable;
+}
+
+@media (max-width: 767px) {
+  .booking-calendar .rbc-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .booking-calendar .rbc-toolbar-label {
+    order: -1;
+    font-size: 0.95rem;
+    padding: 0.15rem 0;
+  }
+
+  .booking-calendar .rbc-btn-group {
+    display: flex;
+    width: 100%;
+  }
+
+  .booking-calendar .rbc-toolbar button {
+    flex: 1;
+    padding: 0.42rem 0.35rem;
+    font-size: 0.68rem;
+  }
+
+  .booking-calendar .rbc-header {
+    padding: 0.35rem 0.15rem;
+    font-size: 0.68rem;
+  }
+
+  .booking-calendar .rbc-label {
+    font-size: 0.65rem;
+  }
+
+  .booking-calendar .rbc-event {
+    font-size: 0.7rem;
+  }
 }

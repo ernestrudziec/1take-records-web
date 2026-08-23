@@ -58,19 +58,19 @@ export function HomeHero() {
   return (
     <section
       ref={containerRef}
-      className="relative flex flex-col items-center overflow-hidden px-6 pb-20 pt-16 text-center md:pt-24"
+      className="relative flex flex-col items-center overflow-hidden px-5 pb-12 pt-10 text-center sm:px-6 sm:pb-20 md:pt-24"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.07),transparent_55%)]" />
 
       <div className="relative mx-auto flex w-full max-w-2xl flex-col items-center">
-        <div data-hero-logo className="mb-10">
+        <div data-hero-logo className="mb-6 sm:mb-10">
           <Image
             src="/logo.png"
             alt="1take.records"
             width={480}
             height={180}
             priority
-            className="mx-auto h-auto w-full max-w-[min(90vw,28rem)]"
+            className="mx-auto h-auto w-full max-w-[min(78vw,18rem)] sm:max-w-[min(90vw,28rem)]"
           />
         </div>
 
@@ -83,46 +83,46 @@ export function HomeHero() {
 
         <p
           data-hero-fade
-          className="mt-6 max-w-lg text-sm leading-relaxed text-zinc-400 md:text-base"
+          className="mt-4 max-w-lg text-sm leading-relaxed text-zinc-400 sm:mt-6 md:text-base"
         >
           Nagrania, miks, mastering i produkcja — jeden take, jeden standard.
           Studio na {studioLocation.fullAddress}.
         </p>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <div className="mt-8 flex w-full max-w-sm flex-col gap-3 sm:mt-10 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
           <Link
             data-hero-cta
             href="/booking"
-            className="inline-flex items-center border border-white bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-black transition-colors hover:bg-zinc-200"
+            className="inline-flex items-center justify-center border border-white bg-white px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-black transition-colors hover:bg-zinc-200 sm:py-3"
           >
             Booking
           </Link>
           <a
             data-hero-cta
             href="#studio"
-            className="inline-flex items-center border border-white/20 px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50"
+            className="inline-flex items-center justify-center border border-white/20 px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50 sm:py-3"
           >
             Studio
           </a>
           <a
             data-hero-cta
             href="#o-nas"
-            className="inline-flex items-center border border-white/20 px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50"
+            className="inline-flex items-center justify-center border border-white/20 px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50 sm:py-3"
           >
             O nas
           </a>
           <a
             data-hero-cta
             href="#kontakt"
-            className="inline-flex items-center border border-white/20 px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50"
+            className="inline-flex items-center justify-center border border-white/20 px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50 sm:py-3"
           >
             Kontakt
           </a>
         </div>
       </div>
 
-      <div data-hero-map className="relative mx-auto mt-16 w-full max-w-3xl">
-        <LocationMap height="h-64 md:h-80" />
+      <div data-hero-map className="relative mx-auto mt-10 w-full max-w-3xl sm:mt-16">
+        <LocationMap height="h-52 sm:h-64 md:h-80" />
         <a
           href={studioLocation.mapsUrl}
           target="_blank"

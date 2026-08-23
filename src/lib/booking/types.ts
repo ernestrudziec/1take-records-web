@@ -77,6 +77,7 @@ export type UserDashboardStats = {
   cancelledBookings: number;
   totalHours: number;
   hoursThisMonth: number;
+  hoursThisYear: number;
   upcomingBookings: number;
 };
 

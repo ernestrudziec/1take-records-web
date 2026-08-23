@@ -21,7 +21,7 @@ const recovery = readFileSync(join(templatesDir, "recovery.html"), "utf8");
 const payload = {
   site_url: "https://www.1take.pl",
   uri_allow_list:
-    "https://www.1take.pl/**,https://1take-records-site.vercel.app/**,http://localhost:3000/**",
+    "https://www.1take.pl/**,https://1take.pl/**,https://1take-records-web.vercel.app/**,https://1take-bookings.vercel.app/**,https://*.vercel.app/**,http://localhost:3000/**",
   mailer_subjects_confirmation: "Potwierdź konto — 1take.records",
   mailer_templates_confirmation_content: confirmation,
   mailer_subjects_recovery: "Reset hasła — 1take.records",

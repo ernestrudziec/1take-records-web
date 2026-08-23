@@ -62,9 +62,11 @@ export function computeUserStats(
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
   const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  const yearStart = new Date(now.getFullYear(), 0, 1);
 
   let totalHours = 0;
   let hoursThisMonth = 0;
+  let hoursThisYear = 0;
   let upcomingBookings = 0;
   let confirmedBookings = 0;
   let cancelledBookings = 0;
@@ -83,6 +85,9 @@ export function computeUserStats(
     if (start >= monthStart && start < monthEnd) {
       hoursThisMonth += hours;
     }
+    if (start >= yearStart) {
+      hoursThisYear += hours;
+    }
     if (start >= now) {
       upcomingBookings += 1;
     }
@@ -94,6 +99,7 @@ export function computeUserStats(
     cancelledBookings,
     totalHours: roundMoney(totalHours),
     hoursThisMonth: roundMoney(hoursThisMonth),
+    hoursThisYear: roundMoney(hoursThisYear),
     upcomingBookings,
   };
 }

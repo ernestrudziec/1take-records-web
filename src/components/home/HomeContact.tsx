@@ -11,14 +11,14 @@ const socialLinks = [
 
 export function HomeContact() {
   return (
-    <section id="kontakt" className="border-t border-white/10 px-6 py-20 scroll-mt-8">
+    <section id="kontakt" className="scroll-mt-8 border-t border-white/10 px-5 py-14 sm:px-6 sm:py-20">
       <SectionHeading
         eyebrow="Kontakt"
         title="Porozmawiajmy"
         description="Napisz, zadzwoń lub umów sesję — odpowiemy najszybciej jak to możliwe."
       />
 
-      <div className="mx-auto mt-12 max-w-2xl border border-white/10 bg-zinc-950 px-8 py-12 text-center">
+      <div className="mx-auto mt-12 max-w-2xl border border-white/10 bg-zinc-950 px-5 py-10 text-center sm:px-8 sm:py-12">
         <div className="space-y-6">
           <a
             href={`mailto:${siteConfig.email}`}

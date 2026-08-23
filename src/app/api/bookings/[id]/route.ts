@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentProfile, isAdminProfile } from "@/lib/booking/auth";
 import type { BookingUpdateInput } from "@/lib/booking/types";
+import { logBookingEvent } from "@/lib/booking/utils";
 import { createClient } from "@/lib/supabase/server";
 import {
   formatBookingTelegramMessage,
@@ -71,12 +72,21 @@ export async function PATCH(request: Request, context: RouteContext) {
   const action = data.status === "cancelled" ? "cancelled" : "updated";
   const userName = data.profiles?.display_name ?? profile.display_name;
 
+  await logBookingEvent(supabase, {
+    booking: data,
+    actorId: profile.id,
+    eventType: action,
+  });
+
   await sendTelegramNotification(
     formatBookingTelegramMessage({
       action,
       userName,
+      actorName: profile.display_name,
       startAt: data.start_at,
       endAt: data.end_at,
+      previousStartAt: existing.start_at,
+      previousEndAt: existing.end_at,
       notes: data.notes,
     }),
   );
@@ -124,10 +134,17 @@ export async function DELETE(_request: Request, context: RouteContext) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  await logBookingEvent(supabase, {
+    booking: data,
+    actorId: profile.id,
+    eventType: "cancelled",
+  });
+
   await sendTelegramNotification(
     formatBookingTelegramMessage({
       action: "cancelled",
       userName: data.profiles?.display_name ?? profile.display_name,
+      actorName: profile.display_name,
       startAt: data.start_at,
       endAt: data.end_at,
       notes: data.notes,

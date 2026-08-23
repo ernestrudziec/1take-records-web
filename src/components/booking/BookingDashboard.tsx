@@ -1,19 +1,44 @@
 "use client";
 
-import { format, parse, startOfWeek, getDay } from "date-fns";
+import { format, parse, startOfWeek, getDay, addHours } from "date-fns";
 import { pl } from "date-fns/locale";
+import {
+  CalendarDays,
+  CircleCheck,
+  Move,
+  Plus,
+  StickyNote,
+  Trash2,
+} from "lucide-react";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { View } from "react-big-calendar";
 import { dateFnsLocalizer } from "react-big-calendar";
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { DateTimePicker } from "@/components/booking/DateTimePicker";
+import { CalendarSkeleton } from "@/components/booking/Loader";
+import { Modal } from "@/components/ui/Modal";
 import type { Booking, Profile } from "@/lib/booking/types";
-import { createClient } from "@/lib/supabase/client";
 
-const Calendar = dynamic(
-  () => import("react-big-calendar").then((mod) => mod.Calendar),
-  { ssr: false },
-);
+type CalendarEvent = {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  resource: Booking;
+};
+
+type SlotInfo = {
+  start: Date;
+  end: Date;
+};
+
+type PendingMove = {
+  booking: Booking;
+  start: Date;
+  end: Date;
+};
 
 const locales = { pl };
 
@@ -25,49 +50,64 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-type CalendarEvent = {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  resource: Booking;
-};
+const DnDCalendar = dynamic(
+  async () => {
+    const { Calendar } = await import("react-big-calendar");
+    const { default: withDragAndDrop } = await import(
+      "react-big-calendar/lib/addons/dragAndDrop"
+    );
+    return withDragAndDrop(Calendar);
+  },
+  { ssr: false },
+);
 
-type BookingDashboardProps = {
-  profile: Profile;
-};
-
-function toDateTimeLocalValue(date: Date) {
-  const offset = date.getTimezoneOffset();
-  const local = new Date(date.getTime() - offset * 60 * 1000);
-  return local.toISOString().slice(0, 16);
+function formatRange(start: Date, end: Date) {
+  return `${format(start, "d MMM, HH:mm", { locale: pl })} – ${format(end, "HH:mm", { locale: pl })}`;
 }
 
-export function BookingDashboard({ profile }: BookingDashboardProps) {
+function BookingEvent({ event }: { event: CalendarEvent }) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center px-1 py-0.5 text-center leading-tight">
+      <span className="text-[11px] font-semibold tracking-wide text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)]">
+        {format(event.start, "HH:mm")} – {format(event.end, "HH:mm")}
+      </span>
+      <span className="mt-0.5 text-xs font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)]">
+        {event.title}
+      </span>
+    </div>
+  );
+}
+
+export function BookingDashboard({ profile }: { profile: Profile }) {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [view, setView] = useState<View>("week");
+  const [view, setView] = useState<View>("day");
+  const [date, setDate] = useState(new Date());
+  const [calendarHeight, setCalendarHeight] = useState(560);
   const [selected, setSelected] = useState<Booking | null>(null);
-  const [startAt, setStartAt] = useState(toDateTimeLocalValue(new Date()));
-  const [endAt, setEndAt] = useState(
-    toDateTimeLocalValue(new Date(Date.now() + 2 * 60 * 60 * 1000)),
-  );
+  const [createOpen, setCreateOpen] = useState(false);
+  const [pendingMove, setPendingMove] = useState<PendingMove | null>(null);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [startAt, setStartAt] = useState(new Date());
+  const [endAt, setEndAt] = useState(addHours(new Date(), 2));
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const canManage = useCallback(
+    (booking: Booking) => profile.is_admin || booking.user_id === profile.id,
+    [profile],
+  );
 
   const loadBookings = useCallback(async () => {
     setLoading(true);
     setError(null);
-
     try {
       const response = await fetch("/api/bookings");
       const payload = await response.json();
-
       if (!response.ok) {
         throw new Error(payload.error ?? "Nie udało się pobrać bookingów");
       }
-
       setBookings(payload.bookings ?? []);
     } catch (fetchError) {
       setError(
@@ -84,6 +124,20 @@ export function BookingDashboard({ profile }: BookingDashboardProps) {
     loadBookings();
   }, [loadBookings]);
 
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 768px)").matches;
+    if (desktop) setView("week");
+
+    function syncHeight() {
+      const wide = window.matchMedia("(min-width: 768px)").matches;
+      setCalendarHeight(wide ? 680 : Math.max(460, window.innerHeight * 0.58));
+    }
+
+    syncHeight();
+    window.addEventListener("resize", syncHeight);
+    return () => window.removeEventListener("resize", syncHeight);
+  }, []);
+
   const events = useMemo<CalendarEvent[]>(
     () =>
       bookings.map((booking) => ({
@@ -96,27 +150,42 @@ export function BookingDashboard({ profile }: BookingDashboardProps) {
     [bookings],
   );
 
-  async function handleCreateBooking(event: React.FormEvent) {
-    event.preventDefault();
+  function openCreate(slot?: SlotInfo) {
+    const start = slot?.start ?? new Date();
+    const end = slot?.end ?? addHours(start, 2);
+    setStartAt(start);
+    setEndAt(end);
+    setNotes("");
+    setSelected(null);
+    setCreateOpen(true);
+  }
+
+  function openDetails(booking: Booking) {
+    setSelected(booking);
+    setStartAt(new Date(booking.start_at));
+    setEndAt(new Date(booking.end_at));
+    setNotes(booking.notes ?? "");
+    setCreateOpen(false);
+  }
+
+  async function createBooking() {
     setSubmitting(true);
     setError(null);
-
     try {
       const response = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          start_at: new Date(startAt).toISOString(),
-          end_at: new Date(endAt).toISOString(),
+          start_at: startAt.toISOString(),
+          end_at: endAt.toISOString(),
           notes,
         }),
       });
-
       const payload = await response.json();
       if (!response.ok) {
         throw new Error(payload.error ?? "Nie udało się utworzyć bookingu");
       }
-
+      setCreateOpen(false);
       setNotes("");
       await loadBookings();
     } catch (createError) {
@@ -130,20 +199,53 @@ export function BookingDashboard({ profile }: BookingDashboardProps) {
     }
   }
 
-  async function handleCancelBooking(bookingId: string) {
+  async function updateBooking(nextStart = startAt, nextEnd = endAt, nextNotes = notes) {
+    if (!selected && !pendingMove) return;
+    const booking = selected ?? pendingMove?.booking;
+    if (!booking) return;
+
     setSubmitting(true);
     setError(null);
-
     try {
-      const response = await fetch(`/api/bookings/${bookingId}`, {
+      const response = await fetch(`/api/bookings/${booking.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          start_at: nextStart.toISOString(),
+          end_at: nextEnd.toISOString(),
+          notes: nextNotes,
+        }),
+      });
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error ?? "Nie udało się zapisać zmian");
+      }
+      setSelected(null);
+      setPendingMove(null);
+      await loadBookings();
+    } catch (updateError) {
+      setError(
+        updateError instanceof Error
+          ? updateError.message
+          : "Nie udało się zapisać zmian",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function cancelBooking() {
+    if (!selected) return;
+    setSubmitting(true);
+    try {
+      const response = await fetch(`/api/bookings/${selected.id}`, {
         method: "DELETE",
       });
       const payload = await response.json();
-
       if (!response.ok) {
         throw new Error(payload.error ?? "Nie udało się odwołać bookingu");
       }
-
+      setCancelOpen(false);
       setSelected(null);
       await loadBookings();
     } catch (cancelError) {
@@ -157,268 +259,98 @@ export function BookingDashboard({ profile }: BookingDashboardProps) {
     }
   }
 
-  async function handleUpdateBooking(event: React.FormEvent) {
-    event.preventDefault();
-    if (!selected) return;
-
-    setSubmitting(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`/api/bookings/${selected.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          start_at: new Date(startAt).toISOString(),
-          end_at: new Date(endAt).toISOString(),
-          notes,
-        }),
-      });
-      const payload = await response.json();
-
-      if (!response.ok) {
-        throw new Error(payload.error ?? "Nie udało się zaktualizować bookingu");
-      }
-
-      setSelected(null);
-      await loadBookings();
-    } catch (updateError) {
-      setError(
-        updateError instanceof Error
-          ? updateError.message
-          : "Nie udało się zaktualizować bookingu",
-      );
-    } finally {
-      setSubmitting(false);
-    }
+  function requestMove(event: CalendarEvent, start: Date, end: Date) {
+    if (!canManage(event.resource)) return;
+    setPendingMove({ booking: event.resource, start, end });
   }
-
-  async function handleSignOut() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    window.location.reload();
-  }
-
-  function openBookingDetails(booking: Booking) {
-    setSelected(booking);
-    setStartAt(toDateTimeLocalValue(new Date(booking.start_at)));
-    setEndAt(toDateTimeLocalValue(new Date(booking.end_at)));
-    setNotes(booking.notes ?? "");
-  }
-
-  const canManageSelected =
-    selected &&
-    (profile.is_admin || selected.user_id === profile.id);
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-16">
-      <div className="flex flex-col items-center justify-between gap-4 border border-white/10 bg-zinc-950 p-6 text-center md:flex-row md:text-left">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-[0.3em] text-zinc-500">
-            Zalogowany jako
-          </p>
-          <h2 className="mt-2 text-xl font-semibold text-white">
-            {profile.display_name}
-          </h2>
-          <p className="mt-1 text-sm text-zinc-500">{profile.email}</p>
-          {profile.is_admin && (
-            <span className="mt-3 inline-block border border-white/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
-              Admin
-            </span>
-          )}
-        </div>
-
-        <div className="flex items-center gap-3">
-          <span
-            className="inline-flex h-3 w-3 rounded-full"
-            style={{ backgroundColor: profile.color }}
-          />
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className="border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-white transition-colors hover:border-white/50"
-          >
-            Wyloguj
-          </button>
-        </div>
+    <div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="flex items-start gap-2 text-xs text-zinc-500">
+          <Move className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+          <span>
+            Kliknij wolny slot, żeby dodać booking. Na desktopie możesz też
+            przeciągnąć termin.
+          </span>
+        </p>
+        <button
+          type="button"
+          onClick={() => openCreate()}
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-black hover:bg-zinc-200 sm:py-2.5"
+        >
+          <Plus className="h-4 w-4" />
+          Nowy booking
+        </button>
       </div>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="booking-calendar border border-white/10 bg-zinc-950 p-4">
-          {loading ? (
-            <p className="py-20 text-center text-sm text-zinc-500">
-              Ładowanie kalendarza...
-            </p>
-          ) : (
-            <Calendar
-              localizer={localizer}
-              events={events}
-              view={view}
-              onView={setView}
-              defaultView="week"
-              views={["month", "week", "day"]}
-              culture="pl"
-              step={60}
-              timeslots={1}
-              style={{ height: 620 }}
-              onSelectEvent={(event) =>
-                openBookingDetails((event as CalendarEvent).resource)
-              }
-              eventPropGetter={(event) => ({
-                style: {
-                  backgroundColor:
-                    (event as CalendarEvent).resource.profiles?.color ??
-                    "#ffffff",
-                  border: "none",
-                  color: "#fff",
-                  borderRadius: 0,
-                },
-              })}
-            />
-          )}
-        </div>
-
-        <div className="space-y-6">
-          <form
-            onSubmit={handleCreateBooking}
-            className="border border-white/10 bg-zinc-950 p-6"
-          >
-            <p className="text-xs font-medium uppercase tracking-[0.3em] text-zinc-500">
-              Nowy booking
-            </p>
-            <h3 className="mt-2 text-lg font-semibold text-white">
-              Zarezerwuj termin
-            </h3>
-
-            <div className="mt-6 space-y-4">
-              <label className="block text-left">
-                <span className="mb-2 block text-xs uppercase tracking-[0.15em] text-zinc-500">
-                  Start
-                </span>
-                <input
-                  type="datetime-local"
-                  required
-                  value={startAt}
-                  onChange={(event) => setStartAt(event.target.value)}
-                  className="w-full border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none focus:border-white/30"
-                />
-              </label>
-
-              <label className="block text-left">
-                <span className="mb-2 block text-xs uppercase tracking-[0.15em] text-zinc-500">
-                  Koniec
-                </span>
-                <input
-                  type="datetime-local"
-                  required
-                  value={endAt}
-                  onChange={(event) => setEndAt(event.target.value)}
-                  className="w-full border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none focus:border-white/30"
-                />
-              </label>
-
-              <label className="block text-left">
-                <span className="mb-2 block text-xs uppercase tracking-[0.15em] text-zinc-500">
-                  Notatka
-                </span>
-                <textarea
-                  value={notes}
-                  onChange={(event) => setNotes(event.target.value)}
-                  rows={3}
-                  className="w-full border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none focus:border-white/30"
-                  placeholder="np. nagrania wokalu, miks"
-                />
-              </label>
-            </div>
-
-            <button
-              type="submit"
-              disabled={submitting}
-              className="mt-6 w-full border border-white bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-black transition-colors hover:bg-zinc-200 disabled:opacity-50"
-            >
-              {submitting ? "Zapisuję..." : "Bookuj studio"}
-            </button>
-          </form>
-
-          {selected && canManageSelected && (
-            <form
-              onSubmit={handleUpdateBooking}
-              className="border border-white/10 bg-black p-6"
-            >
-              <p className="text-xs font-medium uppercase tracking-[0.3em] text-zinc-500">
-                Wybrany booking
-              </p>
-              <h3 className="mt-2 text-lg font-semibold text-white">
-                {selected.profiles?.display_name ?? "Booking"}
-              </h3>
-
-              <div className="mt-6 space-y-4">
-                <label className="block text-left">
-                  <span className="mb-2 block text-xs uppercase tracking-[0.15em] text-zinc-500">
-                    Start
-                  </span>
-                  <input
-                    type="datetime-local"
-                    required
-                    value={startAt}
-                    onChange={(event) => setStartAt(event.target.value)}
-                    className="w-full border border-white/10 bg-zinc-950 px-4 py-3 text-sm text-white outline-none focus:border-white/30"
-                  />
-                </label>
-
-                <label className="block text-left">
-                  <span className="mb-2 block text-xs uppercase tracking-[0.15em] text-zinc-500">
-                    Koniec
-                  </span>
-                  <input
-                    type="datetime-local"
-                    required
-                    value={endAt}
-                    onChange={(event) => setEndAt(event.target.value)}
-                    className="w-full border border-white/10 bg-zinc-950 px-4 py-3 text-sm text-white outline-none focus:border-white/30"
-                  />
-                </label>
-
-                <label className="block text-left">
-                  <span className="mb-2 block text-xs uppercase tracking-[0.15em] text-zinc-500">
-                    Notatka
-                  </span>
-                  <textarea
-                    value={notes}
-                    onChange={(event) => setNotes(event.target.value)}
-                    rows={3}
-                    className="w-full border border-white/10 bg-zinc-950 px-4 py-3 text-sm text-white outline-none focus:border-white/30"
-                  />
-                </label>
-              </div>
-
-              <div className="mt-6 flex flex-col gap-3">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full border border-white bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-black transition-colors hover:bg-zinc-200 disabled:opacity-50"
-                >
-                  {profile.is_admin ? "Zapisz zmiany (admin)" : "Zapisz zmiany"}
-                </button>
-                <button
-                  type="button"
-                  disabled={submitting}
-                  onClick={() => handleCancelBooking(selected.id)}
-                  className="w-full border border-red-500/40 px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-red-300 transition-colors hover:border-red-400"
-                >
-                  Odwołaj booking
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
+      <div className="booking-calendar mt-4 overflow-hidden rounded-2xl border border-white/10 bg-zinc-950 p-2 sm:p-3 md:p-5">
+        {loading ? (
+          <CalendarSkeleton />
+        ) : (
+          <DnDCalendar
+            localizer={localizer}
+            events={events}
+            view={view}
+            date={date}
+            onView={setView}
+            onNavigate={setDate}
+            defaultView="day"
+            views={["month", "week", "day"]}
+            culture="pl"
+            step={30}
+            timeslots={2}
+            selectable
+            resizable
+            components={{
+              event: BookingEvent as never,
+            }}
+            style={{ height: calendarHeight }}
+            messages={{
+              today: "Dziś",
+              previous: "Wstecz",
+              next: "Dalej",
+              month: "Miesiąc",
+              week: "Tydzień",
+              day: "Dzień",
+              showMore: (count: number) => `+${count} więcej`,
+            }}
+            draggableAccessor={(event) =>
+              canManage((event as CalendarEvent).resource)
+            }
+            resizableAccessor={(event) =>
+              canManage((event as CalendarEvent).resource)
+            }
+            onSelectSlot={(slot) => openCreate(slot as SlotInfo)}
+            onSelectEvent={(event) =>
+              openDetails((event as CalendarEvent).resource)
+            }
+            onEventDrop={({ event, start, end }) =>
+              requestMove(event as CalendarEvent, new Date(start), new Date(end))
+            }
+            onEventResize={({ event, start, end }) =>
+              requestMove(event as CalendarEvent, new Date(start), new Date(end))
+            }
+            eventPropGetter={(event) => ({
+              style: {
+                backgroundColor:
+                  (event as CalendarEvent).resource.profiles?.color ?? "#fff",
+                border: "none",
+                color: "#fff",
+                borderRadius: 10,
+                padding: "2px 8px",
+                boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
+              },
+            })}
+          />
+        )}
       </div>
 
       {error && (
-        <p className="mt-6 text-center text-sm text-red-300">{error}</p>
+        <p className="mt-5 text-center text-sm text-red-300">{error}</p>
       )}
 
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
         {Array.from(
           new Map(
             bookings.map((booking) => [
@@ -430,15 +362,167 @@ export function BookingDashboard({ profile }: BookingDashboardProps) {
             ]),
           ).values(),
         ).map((legend) => (
-          <div key={legend.name} className="flex items-center gap-2 text-sm text-zinc-400">
+          <div
+            key={legend.name}
+            className="flex items-center gap-2 text-sm text-zinc-400"
+          >
             <span
-              className="inline-flex h-3 w-3 rounded-full"
+              className="inline-flex h-2.5 w-2.5 rounded-full"
               style={{ backgroundColor: legend.color }}
             />
             {legend.name}
           </div>
         ))}
       </div>
+
+      <Modal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        title="Nowy booking"
+        description="Wybierz dzień i godzinę z listy — bez wpisywania daty z klawiatury."
+        icon={<CalendarDays className="h-5 w-5 text-white" strokeWidth={1.6} />}
+      >
+        <div className="space-y-4">
+          <DateTimePicker label="Start" value={startAt} onChange={setStartAt} />
+          <DateTimePicker label="Koniec" value={endAt} onChange={setEndAt} />
+          <label className="block text-left">
+            <span className="mb-2 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-500">
+              <StickyNote className="h-3.5 w-3.5" />
+              Notatka
+            </span>
+            <textarea
+              value={notes}
+              onChange={(event) => setNotes(event.target.value)}
+              rows={3}
+              className="w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none focus:border-white/30"
+              placeholder="np. nagrania wokalu, miks"
+            />
+          </label>
+          <button
+            type="button"
+            disabled={submitting}
+            onClick={createBooking}
+            className="w-full rounded-xl bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-black hover:bg-zinc-200 disabled:opacity-50"
+          >
+            {submitting ? "Zapisuję..." : "Zarezerwuj studio"}
+          </button>
+        </div>
+      </Modal>
+
+      <Modal
+        open={Boolean(selected)}
+        onClose={() => setSelected(null)}
+        title={selected?.profiles?.display_name ?? "Booking"}
+        description={
+          selected
+            ? formatRange(new Date(selected.start_at), new Date(selected.end_at))
+            : undefined
+        }
+        icon={<CircleCheck className="h-5 w-5 text-white" strokeWidth={1.6} />}
+      >
+        {selected && canManage(selected) ? (
+          <div className="space-y-4">
+            <DateTimePicker label="Start" value={startAt} onChange={setStartAt} />
+            <DateTimePicker label="Koniec" value={endAt} onChange={setEndAt} />
+            <label className="block text-left">
+              <span className="mb-2 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-500">
+                <StickyNote className="h-3.5 w-3.5" />
+                Notatka
+              </span>
+              <textarea
+                value={notes}
+                onChange={(event) => setNotes(event.target.value)}
+                rows={3}
+                className="w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none focus:border-white/30"
+              />
+            </label>
+            <button
+              type="button"
+              disabled={submitting}
+              onClick={() => updateBooking()}
+              className="w-full rounded-xl bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-black hover:bg-zinc-200 disabled:opacity-50"
+            >
+              {submitting ? "Zapisuję..." : "Zapisz zmiany"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setCancelOpen(true)}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-red-500/30 px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-red-300 hover:border-red-400"
+            >
+              <Trash2 className="h-4 w-4" />
+              Odwołaj booking
+            </button>
+          </div>
+        ) : (
+          <p className="text-sm text-zinc-400">
+            Ten termin należy do kogoś innego. Tylko admin może go edytować.
+          </p>
+        )}
+      </Modal>
+
+      <Modal
+        open={Boolean(pendingMove)}
+        onClose={() => setPendingMove(null)}
+        title="Przenieść booking?"
+        description={
+          pendingMove
+            ? `Z ${formatRange(new Date(pendingMove.booking.start_at), new Date(pendingMove.booking.end_at))} na ${formatRange(pendingMove.start, pendingMove.end)}.`
+            : undefined
+        }
+        icon={<Move className="h-5 w-5 text-white" strokeWidth={1.6} />}
+      >
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setPendingMove(null)}
+            className="rounded-xl border border-white/15 px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white hover:border-white/40"
+          >
+            Anuluj
+          </button>
+          <button
+            type="button"
+            disabled={submitting}
+            onClick={() => {
+              if (!pendingMove) return;
+              setSelected(pendingMove.booking);
+              void updateBooking(
+                pendingMove.start,
+                pendingMove.end,
+                pendingMove.booking.notes ?? "",
+              );
+            }}
+            className="rounded-xl bg-white px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-black hover:bg-zinc-200 disabled:opacity-50"
+          >
+            Potwierdź
+          </button>
+        </div>
+      </Modal>
+
+      <Modal
+        open={cancelOpen}
+        onClose={() => setCancelOpen(false)}
+        title="Odwołać ten termin?"
+        description="Rezerwacja zniknie z kalendarza. Możesz później dodać nową."
+        icon={<Trash2 className="h-5 w-5 text-red-300" strokeWidth={1.6} />}
+      >
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setCancelOpen(false)}
+            className="rounded-xl border border-white/15 px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white"
+          >
+            Zostaw
+          </button>
+          <button
+            type="button"
+            disabled={submitting}
+            onClick={cancelBooking}
+            className="rounded-xl bg-red-500 px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white hover:bg-red-400 disabled:opacity-50"
+          >
+            Odwołaj
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }

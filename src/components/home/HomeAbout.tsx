@@ -21,7 +21,7 @@ const values = [
 
 export function HomeAbout() {
   return (
-    <section id="o-nas" className="border-t border-white/10 px-6 py-20 scroll-mt-8">
+    <section id="o-nas" className="scroll-mt-8 border-t border-white/10 px-5 py-14 sm:px-6 sm:py-20">
       <SectionHeading
         eyebrow="O nas"
         title="Kim jesteśmy"
@@ -48,7 +48,7 @@ export function HomeAbout() {
         {values.map((value) => (
           <article
             key={value.title}
-            className="border border-white/10 bg-zinc-950 p-8 text-center"
+            className="border border-white/10 bg-zinc-950 p-6 text-center sm:p-8"
           >
             <h3 className="text-lg font-semibold text-white">{value.title}</h3>
             <p className="mt-3 text-sm leading-relaxed text-zinc-500">

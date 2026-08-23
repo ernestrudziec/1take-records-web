@@ -1,3 +1,6 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { siteConfig } from "@/lib/navigation";
 
 const socialLinks = [
@@ -7,6 +10,9 @@ const socialLinks = [
 ] as const;
 
 export function Footer() {
+  const pathname = usePathname();
+  if (pathname.startsWith("/booking")) return null;
+
   return (
     <footer className="border-t border-white/10 bg-black text-center">
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-6 py-10">
