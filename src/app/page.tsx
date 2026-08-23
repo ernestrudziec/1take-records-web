@@ -1,23 +1,15 @@
+import { HomeAbout } from "@/components/home/HomeAbout";
+import { HomeContact } from "@/components/home/HomeContact";
+import { HomeStudio } from "@/components/home/HomeStudio";
 import { HomeHero } from "@/components/HomeHero";
-import { HomeArtistsPreview } from "@/components/home/HomeArtistsPreview";
-import {
-  HomeCta,
-  HomeExplore,
-  HomeLocation,
-} from "@/components/home/HomeSections";
-import { HomeProcess } from "@/components/home/HomeProcess";
-import { HomeServices } from "@/components/home/HomeServices";
 
 export default function Home() {
   return (
     <>
       <HomeHero />
-      <HomeServices />
-      <HomeArtistsPreview />
-      <HomeProcess />
-      <HomeLocation />
-      <HomeExplore />
-      <HomeCta />
+      <HomeStudio />
+      <HomeAbout />
+      <HomeContact />
     </>
   );
 }

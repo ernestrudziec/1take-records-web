@@ -2,6 +2,9 @@
 
 Landing page studia nagraniowego **1take.records** — czarny, minimalistyczny design.
 
+**Produkcja:** [www.1take.pl](https://www.1take.pl)  
+**Vercel:** [1take-records-site.vercel.app](https://1take-records-site.vercel.app)
+
 ## Stack
 
 - Next.js 16 (App Router)
@@ -12,12 +15,10 @@ Landing page studia nagraniowego **1take.records** — czarny, minimalistyczny d
 
 ## Strony
 
-- `/` — landing
-- `/artysci` — nasi artyści
-- `/inzynierowie` — nasi inżynierowie
-- `/beatmakerzy` — nasi beatmakerzy
-- `/studio` — nasze studio
-- `/o-nas` — o nas
+- `/` — landing (studio, o nas, kontakt, mapa)
+- `/booking` — rezerwacja studia (Supabase Auth)
+
+Konfiguracja Auth i szablony maili: [`supabase/AUTH_SETUP.md`](supabase/AUTH_SETUP.md)
 
 ## Dev
 

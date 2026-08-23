@@ -5,7 +5,9 @@ import gsap from "gsap";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
+import { LocationMap } from "@/components/LocationMap";
 import { siteConfig } from "@/lib/navigation";
+import { studioLocation } from "@/lib/location";
 
 export function HomeHero() {
   const containerRef = useRef<HTMLElement>(null);
@@ -39,6 +41,15 @@ export function HomeHero() {
             stagger: 0.08,
           },
           "-=0.3",
+        )
+        .from(
+          "[data-hero-map]",
+          {
+            y: 24,
+            opacity: 0,
+            duration: 0.8,
+          },
+          "-=0.2",
         );
     },
     { scope: containerRef },
@@ -47,10 +58,9 @@ export function HomeHero() {
   return (
     <section
       ref={containerRef}
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pb-20 pt-36 text-center"
+      className="relative flex flex-col items-center overflow-hidden px-6 pb-20 pt-16 text-center md:pt-24"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.07),transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
       <div className="relative mx-auto flex w-full max-w-2xl flex-col items-center">
         <div data-hero-logo className="mb-10">
@@ -76,7 +86,7 @@ export function HomeHero() {
           className="mt-6 max-w-lg text-sm leading-relaxed text-zinc-400 md:text-base"
         >
           Nagrania, miks, mastering i produkcja — jeden take, jeden standard.
-          Poznaj naszych artystów, inżynierów i beatmakerów.
+          Studio na {studioLocation.fullAddress}.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
@@ -87,23 +97,43 @@ export function HomeHero() {
           >
             Booking
           </Link>
-          <Link
+          <a
             data-hero-cta
-            href="/studio"
+            href="#studio"
             className="inline-flex items-center border border-white/20 px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50"
           >
-            Nasze studio
-          </Link>
-          <Link
+            Studio
+          </a>
+          <a
             data-hero-cta
-            href="/o-nas"
+            href="#o-nas"
             className="inline-flex items-center border border-white/20 px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50"
           >
             O nas
-          </Link>
+          </a>
+          <a
+            data-hero-cta
+            href="#kontakt"
+            className="inline-flex items-center border border-white/20 px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50"
+          >
+            Kontakt
+          </a>
         </div>
       </div>
+
+      <div data-hero-map className="relative mx-auto mt-16 w-full max-w-3xl">
+        <LocationMap height="h-64 md:h-80" />
+        <a
+          href={studioLocation.mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-flex text-xs font-medium uppercase tracking-[0.15em] text-zinc-500 transition-colors hover:text-white"
+        >
+          Wyznacz trasę →
+        </a>
+      </div>
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
     </section>
   );
 }
-

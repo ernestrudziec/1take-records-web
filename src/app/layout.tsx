@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -16,7 +15,7 @@ export const metadata: Metadata = {
     template: "%s | 1take.records",
   },
   description:
-    "1take.records — studio nagraniowe. Nasi artyści, inżynierowie dźwięku i beatmakerzy.",
+    "1take.records — studio nagraniowe we Wrocławiu. Nagrania, miks, mastering i produkcja.",
   openGraph: {
     title: "1take.records",
     description: "Studio nagraniowe — jeden take, jeden standard.",
@@ -31,7 +30,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${montserrat.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-black font-sans text-white">
-        <Header />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

@@ -10,7 +10,7 @@ type PageHeroProps = {
 
 export function PageHero({ eyebrow, title, description }: PageHeroProps) {
   return (
-    <section className="border-b border-white/10 px-6 pb-16 pt-40 text-center md:pb-20 md:pt-44">
+    <section className="border-b border-white/10 px-6 pb-16 pt-16 text-center md:pb-20 md:pt-20">
       <div className="mx-auto max-w-2xl">
         {eyebrow && (
           <motion.p
