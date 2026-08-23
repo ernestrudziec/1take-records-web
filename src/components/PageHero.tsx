@@ -10,14 +10,14 @@ type PageHeroProps = {
 
 export function PageHero({ eyebrow, title, description }: PageHeroProps) {
   return (
-    <section className="border-b border-white/10 px-6 pb-16 pt-32 md:pb-20 md:pt-40">
-      <div className="mx-auto max-w-6xl">
+    <section className="border-b border-white/10 px-6 pb-16 pt-40 text-center md:pb-20 md:pt-44">
+      <div className="mx-auto max-w-2xl">
         {eyebrow && (
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-4 text-xs uppercase tracking-[0.3em] text-zinc-500"
+            className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-zinc-500"
           >
             {eyebrow}
           </motion.p>
@@ -26,7 +26,7 @@ export function PageHero({ eyebrow, title, description }: PageHeroProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="font-display max-w-3xl text-4xl leading-none tracking-wide text-white md:text-6xl"
+          className="text-3xl font-semibold tracking-wide text-white md:text-5xl"
         >
           {title}
         </motion.h1>
@@ -34,7 +34,7 @@ export function PageHero({ eyebrow, title, description }: PageHeroProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-6 max-w-2xl text-base leading-relaxed text-zinc-400 md:text-lg"
+          className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-zinc-400 md:text-lg"
         >
           {description}
         </motion.p>

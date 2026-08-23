@@ -1,9 +1,12 @@
+import { studioLocation } from "@/lib/location";
+
 export const siteConfig = {
   name: "1take.records",
   tagline: "Studio nagraniowe",
   description:
-    "1take.records — studio nagraniowe, artyści, inżynierowie dźwięku i beatmakerzy w jednym miejscu.",
+    "1take.records — studio nagraniowe we Wrocławiu. Artyści, inżynierowie dźwięku i beatmakerzy w jednym miejscu.",
   email: "kontakt@1take.records",
+  address: studioLocation.fullAddress,
 } as const;
 
 export const navLinks = [

@@ -4,31 +4,28 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { navLinks, siteConfig } from "@/lib/navigation";
+import { Logo } from "@/components/Logo";
+import { navLinks } from "@/lib/navigation";
 
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Link
-          href="/"
-          className="font-display text-xl tracking-[0.2em] text-white transition-opacity hover:opacity-70"
-          onClick={() => setOpen(false)}
-        >
-          {siteConfig.name}
-        </Link>
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/85 backdrop-blur-md">
+      <div className="relative mx-auto max-w-4xl px-6 py-5 text-center">
+        <div className="flex justify-center" onClick={() => setOpen(false)}>
+          <Logo className="h-9 w-auto md:h-10" priority />
+        </div>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="mt-4 hidden items-center justify-center gap-6 md:flex">
           {navLinks.map((link) => {
             const active = pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm tracking-wide transition-colors ${
+                className={`text-xs font-medium uppercase tracking-[0.2em] transition-colors ${
                   active ? "text-white" : "text-zinc-500 hover:text-white"
                 }`}
               >
@@ -41,7 +38,7 @@ export function Header() {
         <button
           type="button"
           aria-label={open ? "Zamknij menu" : "Otwórz menu"}
-          className="flex h-10 w-10 items-center justify-center text-white md:hidden"
+          className="absolute right-6 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center text-white md:hidden"
           onClick={() => setOpen((value) => !value)}
         >
           <span className="relative block h-3.5 w-5">
@@ -72,17 +69,17 @@ export function Header() {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden border-t border-white/10 bg-black md:hidden"
           >
-            <div className="flex flex-col gap-1 px-6 py-4">
+            <div className="flex flex-col items-center gap-1 px-6 py-4">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.href}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
                   <Link
                     href={link.href}
-                    className="block py-3 text-sm tracking-wide text-zinc-400 transition-colors hover:text-white"
+                    className="block py-3 text-center text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 transition-colors hover:text-white"
                     onClick={() => setOpen(false)}
                   >
                     {link.label}
