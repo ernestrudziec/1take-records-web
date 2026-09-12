@@ -45,42 +45,42 @@ export function EffectsLibrary() {
     <div className="flex h-dvh flex-col overflow-hidden bg-black">
       {activeCategory && category ? (
         <>
-          <div className="flex h-10 shrink-0 items-center justify-between gap-3 px-3">
-            <button
-              type="button"
-              onClick={() => {
-                stop();
-                setActiveCategory(null);
-              }}
-              className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-500 transition-colors hover:text-white"
-            >
-              <ArrowLeft className="h-3 w-3" strokeWidth={1.75} />
-              Kategorie
-            </button>
-            <h1 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
-              {category.title}
-            </h1>
-            <Link
-              href="/#narzedzia"
-              className="text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-600 transition-colors hover:text-white"
-            >
-              Narzędzia
-            </Link>
+          <div className="shrink-0 pt-[env(safe-area-inset-top)]">
+            <div className="flex h-10 items-center justify-between gap-3 px-3">
+              <button
+                type="button"
+                onClick={() => {
+                  stop();
+                  setActiveCategory(null);
+                }}
+                className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-500 transition-colors hover:text-white"
+              >
+                <ArrowLeft className="h-3 w-3" strokeWidth={1.75} />
+                Kategorie
+              </button>
+              <h1 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
+                {category.title}
+              </h1>
+              <Link
+                href="/#narzedzia"
+                className="text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-600 transition-colors hover:text-white"
+              >
+                Narzędzia
+              </Link>
+            </div>
           </div>
 
           <div
-            className={`min-h-0 flex-1 ${
-              activeCategory === "general"
-                ? "overflow-x-hidden overflow-y-auto"
-                : "flex items-center justify-center overflow-visible"
+            className={`min-h-0 flex-1 overflow-x-hidden overflow-y-auto lg:flex lg:justify-center ${
+              activeCategory === "vocals"
+                ? "lg:items-center"
+                : "lg:items-start"
             }`}
           >
             <div
-              className={
-                activeCategory === "general"
-                  ? "mx-auto grid w-[min(100vw,calc((100dvh-2.5rem-30px)*5/7+20px))] grid-cols-5 gap-[5px] pb-3 lg:w-[min(100vw,calc((100dvh-2.5rem-20px)*7/5+30px))] lg:grid-cols-7"
-                  : "grid w-[min(100vw,calc((100dvh-2.5rem-30px)*5/7+20px))] grid-cols-5 grid-rows-7 gap-[5px] lg:w-[min(100vw,calc((100dvh-2.5rem-20px)*7/5+30px))] lg:grid-cols-7 lg:grid-rows-5"
-              }
+              className={`mx-auto grid w-full grid-cols-2 gap-[5px] p-[5px] pb-[max(12px,env(safe-area-inset-bottom))] sm:grid-cols-3 lg:w-[min(100vw,calc((100dvh-2.5rem-20px)*7/5+30px))] lg:grid-cols-7 lg:p-0 ${
+                activeCategory === "vocals" ? "lg:grid-rows-5" : ""
+              }`}
             >
               {effects.map((effect) => {
                 const playId = `${effect.category}:${effect.slug}`;
@@ -99,12 +99,14 @@ export function EffectsLibrary() {
         </>
       ) : (
         <>
-          <div className="flex h-10 shrink-0 items-center justify-center px-3">
-            <h1 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
-              Effects
-            </h1>
+          <div className="shrink-0 pt-[env(safe-area-inset-top)]">
+            <div className="flex h-10 items-center justify-center px-3">
+              <h1 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
+                Effects
+              </h1>
+            </div>
           </div>
-          <div className="mx-auto grid min-h-0 w-full max-w-3xl flex-1 content-center gap-0 px-0 sm:grid-cols-2">
+          <div className="mx-auto grid min-h-0 w-full max-w-3xl flex-1 content-start gap-0 overflow-y-auto px-0 sm:grid-cols-2 sm:content-center">
             {effectCategories.map((item) => {
               const Icon = categoryIcons[item.id];
 
@@ -112,7 +114,7 @@ export function EffectsLibrary() {
                 return (
                   <div
                     key={item.id}
-                    className="flex flex-col items-center border border-white/5 bg-zinc-950/60 p-8 text-center opacity-40"
+                    className="flex flex-col items-center border border-white/5 bg-zinc-950/60 p-6 text-center opacity-40 sm:p-8"
                     aria-disabled
                   >
                     <div className="flex h-12 w-12 items-center justify-center border border-white/10 bg-black">
@@ -136,7 +138,7 @@ export function EffectsLibrary() {
                   key={item.id}
                   type="button"
                   onClick={() => setActiveCategory(item.id)}
-                  className="group flex flex-col items-center border border-white/10 bg-zinc-950 p-8 text-center transition-colors hover:border-white/25"
+                  className="group flex flex-col items-center border border-white/10 bg-zinc-950 p-6 text-center transition-colors hover:border-white/25 sm:p-8"
                 >
                   <div className="flex h-12 w-12 items-center justify-center border border-white/10 bg-black">
                     <Icon className="h-5 w-5 text-white" strokeWidth={1.5} />

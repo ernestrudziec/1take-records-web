@@ -192,6 +192,7 @@ export function EffectTile({
     const card = cardRef.current;
     if (!card) return;
     const rect = card.getBoundingClientRect();
+    if (event.pointerType === "touch") return;
     const px = (event.clientX - rect.left) / rect.width;
     const py = (event.clientY - rect.top) / rect.height;
     setTilt({
@@ -213,12 +214,15 @@ export function EffectTile({
 
   return (
     <div
-      className="relative aspect-square h-full w-full perspective-[900px]"
+      className="relative aspect-square w-full perspective-[900px] lg:h-full"
       style={{ zIndex: hovering || playing ? 20 : 1 }}
     >
       <div
         ref={cardRef}
-        onPointerEnter={() => setHovering(true)}
+        onPointerEnter={(event) => {
+          if (event.pointerType === "touch") return;
+          setHovering(true);
+        }}
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
         className="group relative flex h-full w-full cursor-pointer flex-col overflow-hidden bg-zinc-950 will-change-transform"
@@ -298,7 +302,7 @@ export function EffectTile({
               }}
               aria-pressed={playing}
               aria-label={playing ? "Stop preview" : "Preview"}
-              className={`flex h-11 w-full cursor-pointer items-center justify-center border-r border-white/10 bg-transparent transition-colors hover:bg-white/5 ${
+              className={`flex h-8 w-full cursor-pointer items-center justify-center border-r border-white/10 bg-transparent transition-colors hover:bg-white/5 sm:h-11 ${
                 playing ? "text-white" : "text-zinc-300 hover:text-white"
               }`}
             >
@@ -315,7 +319,7 @@ export function EffectTile({
                 onTutorial();
               }}
               aria-label="Tutorial"
-              className="flex h-11 w-full cursor-pointer items-center justify-center bg-transparent text-zinc-300 transition-colors hover:bg-white/5 hover:text-white"
+              className="flex h-8 w-full cursor-pointer items-center justify-center bg-transparent text-zinc-300 transition-colors hover:bg-white/5 hover:text-white sm:h-11"
             >
               <Video className="pointer-events-none h-3.5 w-3.5" strokeWidth={2} />
             </button>
