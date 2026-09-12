@@ -20,6 +20,7 @@ type CueSheetProps = {
   onStamp: (field: MarkField, index?: number) => void;
   onSeekMark: (time: number) => void;
   onClear: (field: MarkField) => void;
+  onNudge: (field: MarkField, delta: number, index?: number) => void;
   onNotes: (value: string) => void;
   onPlayRange: (kind: "preview" | "explanation", index?: number) => void;
   onOutputs: (kind: "preview" | "explanation", key: "video" | "audio", value: boolean) => void;
@@ -33,6 +34,7 @@ export function CueSheet({
   onStamp,
   onSeekMark,
   onClear,
+  onNudge,
   onNotes,
   onPlayRange,
   onOutputs,
@@ -81,6 +83,7 @@ export function CueSheet({
             onStamp={onStamp}
             onSeekMark={onSeekMark}
             onClear={onClear}
+            onNudge={onNudge}
             onPlay={() => onPlayRange("preview")}
             onOutputs={(key, value) => onOutputs("preview", key, value)}
           />
@@ -93,6 +96,7 @@ export function CueSheet({
             onStamp={onStamp}
             onSeekMark={onSeekMark}
             onClear={onClear}
+            onNudge={onNudge}
             onPlay={() => onPlayRange("explanation")}
             onOutputs={(key, value) => onOutputs("explanation", key, value)}
           />
@@ -161,6 +165,7 @@ export function CueSheet({
                     }}
                     onSeek={onSeekMark}
                     onPlay={() => onPlayRange("preview", index)}
+                    onNudge={(delta) => onNudge("preview-start", delta, index)}
                   />
                   <StampCell
                     value={mark.preview.end}
@@ -170,6 +175,7 @@ export function CueSheet({
                       onStamp("preview-end", index);
                     }}
                     onSeek={onSeekMark}
+                    onNudge={(delta) => onNudge("preview-end", delta, index)}
                   />
                   <StampCell
                     value={mark.explanation.start}
@@ -179,6 +185,7 @@ export function CueSheet({
                       onStamp("explanation-start", index);
                     }}
                     onSeek={onSeekMark}
+                    onNudge={(delta) => onNudge("explanation-start", delta, index)}
                   />
                   <StampCell
                     value={mark.explanation.end}
@@ -188,6 +195,7 @@ export function CueSheet({
                       onStamp("explanation-end", index);
                     }}
                     onSeek={onSeekMark}
+                    onNudge={(delta) => onNudge("explanation-end", delta, index)}
                   />
                 </tr>
               );
@@ -208,6 +216,7 @@ function RangeCard({
   onStamp,
   onSeekMark,
   onClear,
+  onNudge,
   onPlay,
   onOutputs,
 }: {
@@ -219,6 +228,7 @@ function RangeCard({
   onStamp: (field: MarkField) => void;
   onSeekMark: (time: number) => void;
   onClear: (field: MarkField) => void;
+  onNudge: (field: MarkField, delta: number) => void;
   onPlay: () => void;
   onOutputs: (key: "video" | "audio", value: boolean) => void;
 }) {
@@ -241,6 +251,7 @@ function RangeCard({
           onStamp={() => onStamp(startField)}
           onSeek={onSeekMark}
           onClear={() => onClear(startField)}
+          onNudge={(delta) => onNudge(startField, delta)}
         />
         <StampButton
           label="Out"
@@ -248,6 +259,7 @@ function RangeCard({
           onStamp={() => onStamp(endField)}
           onSeek={onSeekMark}
           onClear={() => onClear(endField)}
+          onNudge={(delta) => onNudge(endField, delta)}
         />
       </div>
       <div className="mt-3 flex gap-3 text-[10px] uppercase tracking-[0.14em] text-zinc-400">
@@ -286,12 +298,14 @@ function StampButton({
   onStamp,
   onSeek,
   onClear,
+  onNudge,
 }: {
   label: string;
   value: number | null;
   onStamp: () => void;
   onSeek: (time: number) => void;
   onClear: () => void;
+  onNudge: (delta: number) => void;
 }) {
   return (
     <div className="border border-white/10 bg-black p-2">
@@ -307,18 +321,26 @@ function StampButton({
       <div className="mt-2 flex gap-1">
         <button
           type="button"
-          onClick={onStamp}
-          className="flex-1 border border-white/15 py-1 text-[10px] uppercase tracking-[0.12em] hover:bg-white hover:text-black"
+          disabled={value === null}
+          onClick={() => onNudge(-1)}
+          className="cursor-pointer border border-white/15 px-2 py-1 text-xs hover:bg-white hover:text-black disabled:opacity-30"
         >
-          Set
+          −
         </button>
         <button
           type="button"
           disabled={value === null}
-          onClick={() => value !== null && onSeek(value)}
-          className="border border-white/15 px-2 py-1 text-[10px] uppercase tracking-[0.12em] hover:bg-white hover:text-black disabled:opacity-30"
+          onClick={() => onNudge(1)}
+          className="cursor-pointer border border-white/15 px-2 py-1 text-xs hover:bg-white hover:text-black disabled:opacity-30"
         >
-          Go
+          +
+        </button>
+        <button
+          type="button"
+          onClick={onStamp}
+          className="flex-1 border border-white/15 py-1 text-[10px] uppercase tracking-[0.12em] hover:bg-white hover:text-black"
+        >
+          Set
         </button>
         <button
           type="button"
@@ -339,45 +361,75 @@ function StampCell({
   onStamp,
   onSeek,
   onPlay,
+  onNudge,
 }: {
   value: number | null;
   complete: boolean;
   onStamp: () => void;
   onSeek: (time: number) => void;
   onPlay?: () => void;
+  onNudge?: (delta: number) => void;
 }) {
   return (
     <td className="px-1 py-1">
-      <button
-        type="button"
-        onClick={(event) => {
-          event.stopPropagation();
-          if (event.shiftKey) {
-            onStamp();
-            return;
+      <div className="flex items-center gap-0.5">
+        {onNudge && (
+          <button
+            type="button"
+            disabled={value === null}
+            onClick={(event) => {
+              event.stopPropagation();
+              onNudge(-1);
+            }}
+            className="cursor-pointer px-1 py-1 text-zinc-500 hover:text-white disabled:opacity-30"
+          >
+            −
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            if (event.shiftKey) {
+              onStamp();
+              return;
+            }
+            if (onPlay && value !== null) {
+              onPlay();
+              return;
+            }
+            if (value !== null) onSeek(value);
+            else onStamp();
+          }}
+          className={`min-w-0 flex-1 cursor-pointer px-1 py-1 text-left font-mono underline-offset-2 hover:underline ${
+            value === null
+              ? "text-zinc-600"
+              : complete
+                ? "text-white"
+                : "text-zinc-300"
+          }`}
+          title={
+            onPlay
+              ? "Klik: odtwórz preview · Shift+klik: set z playhead"
+              : "Klik: skok do czasu · Shift+klik: set z playhead"
           }
-          if (onPlay && value !== null) {
-            onPlay();
-            return;
-          }
-          if (value !== null) onSeek(value);
-          else onStamp();
-        }}
-        className={`w-full cursor-pointer px-1 py-1 text-left font-mono underline-offset-2 hover:underline ${
-          value === null
-            ? "text-zinc-600"
-            : complete
-              ? "text-white"
-              : "text-zinc-300"
-        }`}
-        title={
-          onPlay
-            ? "Klik: odtwórz preview · Shift+klik: set z playhead"
-            : "Klik: skok do czasu · Shift+klik: set z playhead"
-        }
-      >
-        {formatClock(value)}
-      </button>
+        >
+          {formatClock(value)}
+        </button>
+        {onNudge && (
+          <button
+            type="button"
+            disabled={value === null}
+            onClick={(event) => {
+              event.stopPropagation();
+              onNudge(1);
+            }}
+            className="cursor-pointer px-1 py-1 text-zinc-500 hover:text-white disabled:opacity-30"
+          >
+            +
+          </button>
+        )}
+      </div>
     </td>
   );
 }

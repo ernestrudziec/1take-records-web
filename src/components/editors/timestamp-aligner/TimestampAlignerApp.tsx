@@ -283,6 +283,21 @@ export function TimestampAlignerApp() {
     [currentTime, selectedIndex, updateRange],
   );
 
+  const nudgeField = useCallback(
+    (field: MarkField, delta: number, index = selectedIndexRef.current) => {
+      const cue = cuesRef.current[index];
+      if (!cue) return;
+      const [kind, edge] = field.split("-") as ["preview" | "explanation", "start" | "end"];
+      const current = marksRef.current[cue.id]?.[kind]?.[edge];
+      if (typeof current !== "number") return;
+      const next = Math.max(0, current + delta);
+      updateRange(cue.id, kind, edge, next);
+      seek(next);
+      setStatus(`${cue.name} · ${kind} ${edge} → ${formatClock(next)}`);
+    },
+    [seek, updateRange],
+  );
+
   const clearField = useCallback(
     (field: MarkField) => {
       if (!selected) return;
@@ -681,6 +696,7 @@ export function TimestampAlignerApp() {
           marks={marks}
           selectedIndex={selectedIndex}
           onSeek={seek}
+          onNudge={(delta) => seek((videoRef.current?.currentTime ?? currentTime) + delta)}
           onTogglePlay={togglePlay}
           onVideoFile={(file) => {
             setVideoUrl(rememberFile(file));
@@ -709,6 +725,7 @@ export function TimestampAlignerApp() {
             onStamp={stamp}
             onSeekMark={seek}
             onClear={clearField}
+            onNudge={nudgeField}
             onNotes={handleNotes}
             onPlayRange={playRange}
             onOutputs={handleOutputs}
