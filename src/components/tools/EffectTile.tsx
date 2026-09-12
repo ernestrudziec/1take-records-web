@@ -122,16 +122,8 @@ export function EffectTile({
   }, []);
 
   const glow = effect.glow;
-  const restGlow = [
-    `inset 0 0 0 1px ${glow}88`,
-    `0 0 18px ${glow}2c`,
-  ].join(", ");
-  const hoverGlow = [
-    `inset 0 0 0 1px ${glow}a3`,
-    `${-tilt.ry}px ${tilt.rx + 10}px 22px rgba(0,0,0,0.45)`,
-    `0 0 22px ${glow}35`,
-  ].join(", ");
-  const playGlow = `inset 0 0 0 1px ${glow}99, 0 0 18px ${glow}3d`;
+  const hoverGlow = `${-tilt.ry}px ${tilt.rx + 10}px 22px rgba(0,0,0,0.45)`;
+  const playGlow = `inset 0 0 0 1px ${glow}, 0 0 18px ${glow}3d`;
 
   return (
     <div
@@ -145,7 +137,7 @@ export function EffectTile({
         onPointerLeave={onPointerLeave}
         className="group relative flex h-full w-full cursor-pointer flex-col bg-zinc-950 will-change-transform"
         style={{
-          boxShadow: hovering ? hoverGlow : playing ? playGlow : restGlow,
+          boxShadow: playing ? playGlow : hovering ? hoverGlow : undefined,
           transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(${hovering ? 12 : 0}px)`,
           transformStyle: "preserve-3d",
           transition: hovering
@@ -162,7 +154,7 @@ export function EffectTile({
                 ? `radial-gradient(320px circle at ${tilt.px}% ${tilt.py}%, ${glow}21, transparent 48%)`
                 : `radial-gradient(280px circle at 50% 38%, ${glow}1c, transparent 52%)`,
             boxShadow: playing
-              ? `inset 0 0 0 1px ${glow}aa, inset 0 0 28px ${glow}30, 0 0 20px ${glow}40`
+              ? `inset 0 0 0 1px ${glow}, inset 0 0 28px ${glow}30, 0 0 20px ${glow}40`
               : undefined,
           }}
           aria-hidden
