@@ -61,7 +61,13 @@ export function CueSheet({
       <div className="border border-white/10 bg-zinc-950 p-4">
         <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-zinc-500">
           {String(selectedIndex + 1).padStart(2, "0")} / {cues.length} · chapter{" "}
-          {selected.chapterLabel}
+          <button
+            type="button"
+            onClick={() => onSeekMark(selected.chapter)}
+            className="font-mono text-zinc-300 underline-offset-2 hover:text-white hover:underline"
+          >
+            {selected.chapterLabel}
+          </button>
         </p>
         <h2 className="mt-2 text-xl font-semibold text-white">{selected.name}</h2>
 
@@ -144,8 +150,17 @@ export function CueSheet({
                       {cue.name}
                     </button>
                   </td>
-                  <td className="px-2 py-1.5 font-mono text-zinc-500">
-                    {cue.chapterLabel}
+                  <td className="px-2 py-1.5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onSelect(index, false);
+                        onSeekMark(cue.chapter);
+                      }}
+                      className="font-mono text-zinc-400 underline-offset-2 hover:text-white hover:underline"
+                    >
+                      {cue.chapterLabel}
+                    </button>
                   </td>
                   <StampCell
                     value={mark.preview.start}
@@ -290,7 +305,14 @@ function StampButton({
   return (
     <div className="border border-white/10 bg-black p-2">
       <p className="text-[10px] uppercase tracking-[0.14em] text-zinc-500">{label}</p>
-      <p className="mt-1 font-mono text-sm text-white">{formatClock(value)}</p>
+      <button
+        type="button"
+        disabled={value === null}
+        onClick={() => value !== null && onSeek(value)}
+        className="mt-1 font-mono text-sm text-white underline-offset-2 hover:underline disabled:cursor-default disabled:no-underline"
+      >
+        {formatClock(value)}
+      </button>
       <div className="mt-2 flex gap-1">
         <button
           type="button"
@@ -335,16 +357,22 @@ function StampCell({
     <td className="px-1 py-1">
       <button
         type="button"
-        onClick={onStamp}
-        onDoubleClick={() => value !== null && onSeek(value)}
-        className={`w-full px-1 py-1 text-left font-mono ${
+        onClick={(event) => {
+          if (event.shiftKey) {
+            onStamp();
+            return;
+          }
+          if (value !== null) onSeek(value);
+          else onStamp();
+        }}
+        className={`w-full px-1 py-1 text-left font-mono underline-offset-2 hover:underline ${
           value === null
             ? "text-zinc-600"
             : complete
               ? "text-white"
               : "text-zinc-300"
         }`}
-        title="Klik: set z playhead · double-click: skok"
+        title="Klik: skok do czasu · Shift+klik: set z playhead"
       >
         {formatClock(value)}
       </button>

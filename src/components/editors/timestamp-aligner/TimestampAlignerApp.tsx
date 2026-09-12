@@ -7,6 +7,10 @@ import {
 } from "@/components/editors/timestamp-aligner/CueSheet";
 import { MediaPane } from "@/components/editors/timestamp-aligner/MediaPane";
 import {
+  safePause,
+  safePlay,
+} from "@/components/editors/timestamp-aligner/media";
+import {
   ALIGNER_MEDIA,
   ALIGNER_STORAGE_KEY,
   DEFAULT_PREVIEW_DEFAULTS,
@@ -36,6 +40,8 @@ export function TimestampAlignerApp() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const objectUrls = useRef<string[]>([]);
   const loopUntil = useRef<number | null>(null);
+  const loopFrom = useRef<number | null>(null);
+  const seekingRef = useRef(false);
   const selectedIndexRef = useRef(0);
   const marksRef = useRef<Record<string, CueMarks>>({});
   const cuesRef = useRef<ShowCutCue[]>([]);
@@ -176,50 +182,73 @@ export function TimestampAlignerApp() {
     const next = Math.max(0, time);
     const video = videoRef.current;
     const audio = audioRef.current;
-    if (video) video.currentTime = next;
+    seekingRef.current = true;
+    if (video) {
+      const onSeeked = () => {
+        seekingRef.current = false;
+        setCurrentTime(video.currentTime);
+      };
+      video.addEventListener("seeked", onSeeked, { once: true });
+      video.currentTime = next;
+    }
     if (audio) audio.currentTime = next;
     setCurrentTime(next);
+    window.setTimeout(() => {
+      seekingRef.current = false;
+    }, 250);
   }, []);
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
     if (video.paused) {
-      void video.play();
-      void audioRef.current?.play();
+      void safePlay(video);
+      void safePlay(audioRef.current);
       setPlaying(true);
     } else {
-      video.pause();
-      audioRef.current?.pause();
+      safePause(video);
+      safePause(audioRef.current);
       setPlaying(false);
       loopUntil.current = null;
+      loopFrom.current = null;
     }
   }, []);
 
   const playFrom = useCallback(
     (time: number, until?: number | null) => {
+      loopFrom.current = time;
       loopUntil.current = until ?? null;
       seek(time);
-      const video = videoRef.current;
-      if (!video) return;
-      void video.play();
-      void audioRef.current?.play();
-      setPlaying(true);
+      window.setTimeout(() => {
+        void safePlay(videoRef.current);
+        void safePlay(audioRef.current);
+        setPlaying(true);
+      }, 40);
     },
     [seek],
   );
 
   function handleTimeUpdate() {
     const video = videoRef.current;
-    if (!video) return;
-    setCurrentTime(video.currentTime);
-    syncAudio(video.currentTime);
+    if (!video || seekingRef.current) return;
+    const time = video.currentTime;
+    setCurrentTime(time);
+    syncAudio(time);
     setPlaying(!video.paused);
-    if (loopUntil.current !== null && video.currentTime >= loopUntil.current) {
-      video.pause();
-      audioRef.current?.pause();
+    const start = loopFrom.current;
+    const end = loopUntil.current;
+    if (
+      start !== null &&
+      end !== null &&
+      time >= start &&
+      time >= end &&
+      time - start < end - start + 1
+    ) {
+      safePause(video);
+      safePause(audioRef.current);
       setPlaying(false);
       loopUntil.current = null;
+      loopFrom.current = null;
     }
   }
 
@@ -471,11 +500,11 @@ export function TimestampAlignerApp() {
     const video = videoRef.current;
     if (!video || !videoUrl) return;
     const onPlay = () => {
-      void audioRef.current?.play();
+      void safePlay(audioRef.current);
       setPlaying(true);
     };
     const onPause = () => {
-      audioRef.current?.pause();
+      safePause(audioRef.current);
       setPlaying(false);
     };
     video.addEventListener("play", onPlay);
