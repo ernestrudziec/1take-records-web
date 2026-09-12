@@ -177,6 +177,48 @@ export function parseOffset(value: string) {
   return Number.isNaN(seconds) ? Number.NaN : seconds;
 }
 
+export function nextChapterTime(
+  cues: ShowCutCue[],
+  index: number,
+  duration = Number.POSITIVE_INFINITY,
+) {
+  return cues[index + 1]?.chapter ?? duration;
+}
+
+export function applyExplanationFromPreview(
+  cues: ShowCutCue[],
+  previous: Record<string, CueMarks>,
+  duration = Number.POSITIVE_INFINITY,
+) {
+  return Object.fromEntries(
+    cues.map((cue, index) => {
+      const current = normalizeMarks(previous[cue.id]);
+      return [cue.id, withExplanationFromPreview(current, cues, index, duration)];
+    }),
+  );
+}
+
+function withExplanationFromPreview(
+  marks: CueMarks,
+  cues: ShowCutCue[],
+  index: number,
+  duration = Number.POSITIVE_INFINITY,
+): CueMarks {
+  const previewEnd = marks.preview.end;
+  if (previewEnd === null) return marks;
+  const nextChapter = nextChapterTime(cues, index, duration);
+  const end =
+    Number.isFinite(nextChapter) && nextChapter > previewEnd ? nextChapter : null;
+  return {
+    ...marks,
+    explanation: {
+      ...marks.explanation,
+      start: previewEnd,
+      end,
+    },
+  };
+}
+
 export function applyPreviewDefaults(
   cues: ShowCutCue[],
   previous: Record<string, CueMarks>,
@@ -189,7 +231,7 @@ export function applyPreviewDefaults(
       const current = normalizeMarks(previous[cue.id]);
       const hasPreview = isRangeComplete(current.preview);
       if (mode === "empty" && hasPreview) {
-        return [cue.id, current];
+        return [cue.id, withExplanationFromPreview(current, cues, index, duration)];
       }
 
       const start = Math.max(0, cue.chapter + defaults.startOffset);
@@ -205,14 +247,19 @@ export function applyPreviewDefaults(
 
       return [
         cue.id,
-        {
-          ...current,
-          preview: {
-            ...current.preview,
-            start,
-            end,
+        withExplanationFromPreview(
+          {
+            ...current,
+            preview: {
+              ...current.preview,
+              start,
+              end,
+            },
           },
-        },
+          cues,
+          index,
+          duration,
+        ),
       ];
     }),
   );

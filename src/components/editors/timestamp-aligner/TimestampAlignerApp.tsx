@@ -14,6 +14,7 @@ import {
   ALIGNER_MEDIA,
   ALIGNER_STORAGE_KEY,
   DEFAULT_PREVIEW_DEFAULTS,
+  applyExplanationFromPreview,
   applyPreviewDefaults,
   buildCutFile,
   cueAtTime,
@@ -96,7 +97,12 @@ export function TimestampAlignerApp() {
           : parseCueList(parsed.cueText || "").cues;
         setCueText(parsed.cueText || cuesToText(nextCues));
         setCues(nextCues);
-        setMarks(mergeMarks(nextCues, parsed.marks ?? {}));
+        setMarks(
+          applyExplanationFromPreview(
+            nextCues,
+            mergeMarks(nextCues, parsed.marks ?? {}),
+          ),
+        );
         if (parsed.previewDefaults) {
           setPreviewStartInput(parsed.previewDefaults.startInput ?? "0");
           setPreviewEndInput(parsed.previewDefaults.endInput ?? "8");
@@ -109,8 +115,13 @@ export function TimestampAlignerApp() {
     } catch {
       // keep defaults
     }
-    setHydrated(true);
+        setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (!hydrated || !cues.length || !duration) return;
+    setMarks((current) => applyExplanationFromPreview(cues, current, duration));
+  }, [cues, duration, hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -257,7 +268,7 @@ export function TimestampAlignerApp() {
     (id: string, kind: "preview" | "explanation", key: keyof TimeRange, value: number | boolean | null) => {
       setMarks((current) => {
         const prev = normalizeMarks(current[id]);
-        return {
+        const next = {
           ...current,
           [id]: {
             ...prev,
@@ -267,9 +278,17 @@ export function TimestampAlignerApp() {
             },
           },
         };
+        if (kind === "preview" && key === "end") {
+          return applyExplanationFromPreview(
+            cuesRef.current,
+            next,
+            duration || undefined,
+          );
+        }
+        return next;
       });
     },
-    [],
+    [duration],
   );
 
   const stamp = useCallback(
