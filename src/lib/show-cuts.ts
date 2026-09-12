@@ -1,6 +1,8 @@
 export type TimeRange = {
   start: number | null;
   end: number | null;
+  video: boolean;
+  audio: boolean;
 };
 
 export type CueMarks = {
@@ -16,81 +18,84 @@ export type ShowCutCue = {
   chapter: number;
 };
 
-export type AlignerExport = {
-  version: 1;
-  updatedAt: string;
-  source: {
-    video: string;
-    audio: string;
-  };
-  cues: Array<{
-    id: string;
-    name: string;
-    chapter: number;
-    chapterLabel: string;
-    preview: TimeRange;
-    explanation: TimeRange;
-    notes: string;
-  }>;
+export type CutItem = {
+  filename: string;
+  name: string;
+  start: string;
+  end: string;
+  video: boolean;
+  audio: boolean;
 };
 
-export const ALIGNER_STORAGE_KEY = "1take.show-cuts.aligner.v1";
+export type CutFile = {
+  cut: CutItem[];
+};
+
+export const ALIGNER_STORAGE_KEY = "1take.show-cuts.aligner.v2";
 export const ALIGNER_MEDIA = {
   video: "/editors/timestamp-aligner/media/video.mp4",
   audio: "/editors/timestamp-aligner/media/audio.mp4",
 } as const;
 
-const RAW_CUES = [
-  ["00:00", "Reverse Delay"],
-  ["01:07", "Formant Glide"],
-  ["02:32", "Call & Response"],
-  ["03:44", "Haunting Vocal"],
-  ["04:54", "Demon Time"],
-  ["06:04", "Reverse Reverb"],
-  ["07:05", "Reverse Reverb +"],
-  ["08:31", "Delay Transition"],
-  ["10:24", "Vocal Synth"],
-  ["11:23", "Vocal Rapture"],
-  ["12:26", "Impactful Vocals"],
-  ["14:01", "Gap Filler"],
-  ["16:01", "Pretty Vocals"],
-  ["17:36", "Pretty Slap"],
-  ["18:28", "Stretch & Stutter"],
-  ["19:47", "Gated Fun"],
-  ["20:43", "Ambient Pad"],
-  ["22:06", "Distant Voicemail"],
-  ["22:58", "Trippy Delays"],
-  ["24:23", "Movements"],
-  ["25:38", "Buggin’ Out"],
-  ["26:35", "Transition Riser"],
-  ["28:04", "Melody Tails"],
-  ["29:18", "Gated Effects"],
-  ["30:38", "Shifted Slap"],
-  ["31:35", "Distorted Adlibs"],
-  ["32:47", "Dark Reverb"],
-  ["33:46", "Dark Ambience"],
-  ["34:47", "Flanger Delays"],
-  ["35:42", "Megaphone"],
-  ["36:32", "Build Up"],
-  ["38:05", "Throw"],
-  ["39:14", "Vocal Samples"],
-  ["40:58", "Distorted Room"],
-  ["41:57", "Sidechain Stutter"],
-] as const;
+export const DEFAULT_CUE_TEXT = `00:00 Reverse Delay
+01:07 Formant Glide
+02:32 Call & Response
+03:44 Haunting Vocal
+04:54 Demon Time
+06:04 Reverse Reverb
+07:05 Reverse Reverb +
+08:31 Delay Transition
+10:24 Vocal Synth
+11:23 Vocal Rapture
+12:26 Impactful Vocals
+14:01 Gap Filler
+16:01 Pretty Vocals
+17:36 Pretty Slap
+18:28 Stretch & Stutter
+19:47 Gated Fun
+20:43 Ambient Pad
+22:06 Distant Voicemail
+22:58 Trippy Delays
+24:23 Movements
+25:38 Buggin’ Out
+26:35 Transition Riser
+28:04 Melody Tails
+29:18 Gated Effects
+30:38 Shifted Slap
+31:35 Distorted Adlibs
+32:47 Dark Reverb
+33:46 Dark Ambience
+34:47 Flanger Delays
+35:42 Megaphone
+36:32 Build Up
+38:05 Throw
+39:14 Vocal Samples
+40:58 Distorted Room
+41:57 Sidechain Stutter`;
 
-function slugify(name: string) {
+const CUE_LINE =
+  /^\s*(?:\d+[\.)]\s*)?(\d{1,2}:\d{2}(?::\d{2}(?:\.\d+)?)?)\s+[-–—:]?\s*(.+?)\s*$/;
+
+export function slugify(name: string, separator = "-") {
   return name
     .toLowerCase()
     .replace(/&/g, " and ")
     .replace(/\+/g, " plus ")
     .replace(/['’]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+    .replace(/[^a-z0-9]+/g, separator)
+    .replace(new RegExp(`^${separator}|${separator}$`, "g"), "");
+}
+
+export function filenameSlug(name: string) {
+  return slugify(name, "_") || "clip";
 }
 
 export function parseClock(label: string) {
-  const [minutes, seconds] = label.split(":").map(Number);
-  return minutes * 60 + seconds;
+  const parts = label.split(":").map(Number);
+  if (parts.some((part) => Number.isNaN(part))) return Number.NaN;
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  return parts[0] ?? Number.NaN;
 }
 
 export function formatClock(seconds: number | null, precise = true) {
@@ -104,11 +109,32 @@ export function formatClock(seconds: number | null, precise = true) {
   return `${String(mins).padStart(2, "0")}:${secs.toFixed(2).padStart(5, "0")}`;
 }
 
+export function formatCutClock(seconds: number) {
+  const clamped = Math.max(0, seconds);
+  const hours = Math.floor(clamped / 3600);
+  const mins = Math.floor((clamped % 3600) / 60);
+  const secs = clamped % 60;
+  const whole = Math.abs(secs - Math.round(secs)) < 0.005;
+  const secLabel = whole
+    ? String(Math.round(secs)).padStart(2, "0")
+    : secs.toFixed(2).padStart(5, "0");
+  return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${secLabel}`;
+}
+
 export function emptyMarks(): CueMarks {
   return {
-    preview: { start: null, end: null },
-    explanation: { start: null, end: null },
+    preview: { start: null, end: null, video: false, audio: true },
+    explanation: { start: null, end: null, video: true, audio: false },
     notes: "",
+  };
+}
+
+export function normalizeMarks(value?: Partial<CueMarks> | null): CueMarks {
+  const defaults = emptyMarks();
+  return {
+    preview: { ...defaults.preview, ...value?.preview },
+    explanation: { ...defaults.explanation, ...value?.explanation },
+    notes: value?.notes ?? "",
   };
 }
 
@@ -116,25 +142,164 @@ export function isRangeComplete(range: TimeRange) {
   return range.start !== null && range.end !== null && range.end > range.start;
 }
 
-export const showCutCues: ShowCutCue[] = RAW_CUES.map(([chapterLabel, name]) => ({
-  id: slugify(name),
-  name,
-  chapterLabel,
-  chapter: parseClock(chapterLabel),
-}));
+export function parseCueList(text: string) {
+  const cues: ShowCutCue[] = [];
+  const errors: string[] = [];
+  const usedIds = new Map<string, number>();
 
-export function chapterEnd(index: number, duration = Number.POSITIVE_INFINITY) {
-  const next = showCutCues[index + 1];
-  return next ? next.chapter : duration;
+  for (const [index, raw] of text.split(/\r?\n/).entries()) {
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) continue;
+    const match = line.match(CUE_LINE);
+    if (!match) {
+      errors.push(`linia ${index + 1}: ${line}`);
+      continue;
+    }
+    const chapterLabel = match[1];
+    const name = match[2].trim();
+    const chapter = parseClock(chapterLabel);
+    if (Number.isNaN(chapter)) {
+      errors.push(`linia ${index + 1}: zły czas ${chapterLabel}`);
+      continue;
+    }
+    const baseId = slugify(name) || `cue-${index + 1}`;
+    const seen = usedIds.get(baseId) ?? 0;
+    usedIds.set(baseId, seen + 1);
+    cues.push({
+      id: seen === 0 ? baseId : `${baseId}-${seen + 1}`,
+      name,
+      chapterLabel,
+      chapter,
+    });
+  }
+
+  return { cues, errors };
 }
 
-export function cueAtTime(time: number) {
-  for (let i = showCutCues.length - 1; i >= 0; i -= 1) {
-    if (time >= showCutCues[i].chapter) return i;
+export function cuesToText(cues: ShowCutCue[]) {
+  return cues.map((cue) => `${cue.chapterLabel} ${cue.name}`).join("\n");
+}
+
+export function defaultMarksMap(cues: ShowCutCue[]) {
+  return Object.fromEntries(cues.map((cue) => [cue.id, emptyMarks()]));
+}
+
+export function mergeMarks(
+  cues: ShowCutCue[],
+  previous: Record<string, CueMarks>,
+) {
+  return Object.fromEntries(
+    cues.map((cue) => [cue.id, normalizeMarks(previous[cue.id])]),
+  );
+}
+
+export function cueAtTime(cues: ShowCutCue[], time: number) {
+  for (let i = cues.length - 1; i >= 0; i -= 1) {
+    if (time >= cues[i].chapter) return i;
   }
   return 0;
 }
 
-export function defaultMarksMap() {
-  return Object.fromEntries(showCutCues.map((cue) => [cue.id, emptyMarks()]));
+export function buildCutFile(
+  cues: ShowCutCue[],
+  marks: Record<string, CueMarks>,
+): CutFile {
+  const cut: CutItem[] = [];
+
+  for (const cue of cues) {
+    const mark = normalizeMarks(marks[cue.id]);
+    if (isRangeComplete(mark.preview) && (mark.preview.video || mark.preview.audio)) {
+      cut.push({
+        filename: `${filenameSlug(cue.name)}_preview`,
+        name: cue.name,
+        start: formatCutClock(mark.preview.start ?? 0),
+        end: formatCutClock(mark.preview.end ?? 0),
+        video: mark.preview.video,
+        audio: mark.preview.audio,
+      });
+    }
+    if (
+      isRangeComplete(mark.explanation) &&
+      (mark.explanation.video || mark.explanation.audio)
+    ) {
+      cut.push({
+        filename: `${filenameSlug(cue.name)}_tutorial`,
+        name: cue.name,
+        start: formatCutClock(mark.explanation.start ?? 0),
+        end: formatCutClock(mark.explanation.end ?? 0),
+        video: mark.explanation.video,
+        audio: mark.explanation.audio,
+      });
+    }
+  }
+
+  return { cut };
+}
+
+function readCutTime(item: Partial<CutItem> & Record<string, unknown>) {
+  const start = item.start ?? item.timeStart;
+  const end = item.end ?? item.timeEnd;
+  return {
+    start: typeof start === "string" || typeof start === "number" ? parseClock(String(start)) : Number.NaN,
+    end: typeof end === "string" || typeof end === "number" ? parseClock(String(end)) : Number.NaN,
+    video: Boolean(item.video ?? item.generateVideo),
+    audio: Boolean(item.audio ?? item.generateAudio),
+  };
+}
+
+export function importCutFile(payload: unknown) {
+  const root = payload as { cut?: unknown; cuts?: unknown; cues?: unknown };
+  if (Array.isArray(root.cues)) {
+    const cues = (root.cues as ShowCutCue[]).filter((cue) => cue.id && cue.name);
+    const marks = Object.fromEntries(
+      (root.cues as Array<ShowCutCue & CueMarks>).map((cue) => [
+        cue.id,
+        normalizeMarks(cue),
+      ]),
+    );
+    return { cues, marks, cueText: cuesToText(cues) };
+  }
+
+  const items = (root.cut ?? root.cuts) as Array<Record<string, unknown>> | undefined;
+  if (!Array.isArray(items)) {
+    throw new Error("JSON musi mieć tablicę cut");
+  }
+
+  const cues: ShowCutCue[] = [];
+  const marks: Record<string, CueMarks> = {};
+
+  for (const item of items) {
+    const name = String(item.name ?? item.title ?? "").trim();
+    if (!name) continue;
+    const id = slugify(name);
+    if (!marks[id]) {
+      const times = readCutTime(item);
+      cues.push({
+        id,
+        name,
+        chapterLabel: formatClock(Number.isNaN(times.start) ? 0 : times.start, false),
+        chapter: Number.isNaN(times.start) ? 0 : times.start,
+      });
+      marks[id] = emptyMarks();
+    }
+    const filename = String(item.filename ?? item.slug ?? "");
+    const times = readCutTime(item);
+    const kind =
+      filename.endsWith("_tutorial") || filename.endsWith("_explanation")
+        ? "explanation"
+        : filename.endsWith("_preview") || times.audio
+          ? "preview"
+          : "explanation";
+    marks[id] = {
+      ...marks[id],
+      [kind]: {
+        start: Number.isNaN(times.start) ? null : times.start,
+        end: Number.isNaN(times.end) ? null : times.end,
+        video: times.video,
+        audio: times.audio,
+      },
+    };
+  }
+
+  return { cues, marks, cueText: cuesToText(cues) };
 }

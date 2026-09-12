@@ -2,16 +2,18 @@
 
 import { useEffect, useRef } from "react";
 import {
+  emptyMarks,
   formatClock,
   isRangeComplete,
-  showCutCues,
   type CueMarks,
+  type ShowCutCue,
   type TimeRange,
 } from "@/lib/show-cuts";
 
 export type MarkField = "preview-start" | "preview-end" | "explanation-start" | "explanation-end";
 
 type CueSheetProps = {
+  cues: ShowCutCue[];
   selectedIndex: number;
   marks: Record<string, CueMarks>;
   onSelect: (index: number, jump?: boolean) => void;
@@ -20,9 +22,11 @@ type CueSheetProps = {
   onClear: (field: MarkField) => void;
   onNotes: (value: string) => void;
   onPlayRange: (kind: "preview" | "explanation") => void;
+  onOutputs: (kind: "preview" | "explanation", key: "video" | "audio", value: boolean) => void;
 };
 
 export function CueSheet({
+  cues,
   selectedIndex,
   marks,
   onSelect,
@@ -31,9 +35,10 @@ export function CueSheet({
   onClear,
   onNotes,
   onPlayRange,
+  onOutputs,
 }: CueSheetProps) {
   const rowRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const selected = showCutCues[selectedIndex];
+  const selected = cues[selectedIndex];
   const selectedMarks = selected ? marks[selected.id] : undefined;
 
   useEffect(() => {
@@ -43,13 +48,19 @@ export function CueSheet({
     });
   }, [selected]);
 
-  if (!selected || !selectedMarks) return null;
+  if (!selected || !selectedMarks) {
+    return (
+      <div className="flex flex-1 items-center justify-center border border-white/10 px-6 py-16 text-center text-sm text-zinc-500">
+        Wklej timestampy po lewej i kliknij „Zastosuj listę”.
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-0 min-w-0 flex-col gap-3">
       <div className="border border-white/10 bg-zinc-950 p-4">
         <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-zinc-500">
-          {String(selectedIndex + 1).padStart(2, "0")} / {showCutCues.length} · chapter{" "}
+          {String(selectedIndex + 1).padStart(2, "0")} / {cues.length} · chapter{" "}
           {selected.chapterLabel}
         </p>
         <h2 className="mt-2 text-xl font-semibold text-white">{selected.name}</h2>
@@ -65,6 +76,7 @@ export function CueSheet({
             onSeekMark={onSeekMark}
             onClear={onClear}
             onPlay={() => onPlayRange("preview")}
+            onOutputs={(key, value) => onOutputs("preview", key, value)}
           />
           <RangeCard
             title="Explanation"
@@ -76,6 +88,7 @@ export function CueSheet({
             onSeekMark={onSeekMark}
             onClear={onClear}
             onPlay={() => onPlayRange("explanation")}
+            onOutputs={(key, value) => onOutputs("explanation", key, value)}
           />
         </div>
 
@@ -106,12 +119,8 @@ export function CueSheet({
             </tr>
           </thead>
           <tbody>
-            {showCutCues.map((cue, index) => {
-              const mark = marks[cue.id] ?? {
-                preview: { start: null, end: null },
-                explanation: { start: null, end: null },
-                notes: "",
-              };
+            {cues.map((cue, index) => {
+              const mark = marks[cue.id] ?? emptyMarks();
               const active = index === selectedIndex;
               return (
                 <tr
@@ -194,6 +203,7 @@ function RangeCard({
   onSeekMark,
   onClear,
   onPlay,
+  onOutputs,
 }: {
   title: string;
   hint: string;
@@ -204,6 +214,7 @@ function RangeCard({
   onSeekMark: (time: number) => void;
   onClear: (field: MarkField) => void;
   onPlay: () => void;
+  onOutputs: (key: "video" | "audio", value: boolean) => void;
 }) {
   const complete = isRangeComplete(range);
 
@@ -232,6 +243,24 @@ function RangeCard({
           onSeek={onSeekMark}
           onClear={() => onClear(endField)}
         />
+      </div>
+      <div className="mt-3 flex gap-3 text-[10px] uppercase tracking-[0.14em] text-zinc-400">
+        <label className="inline-flex items-center gap-1.5">
+          <input
+            type="checkbox"
+            checked={range.video}
+            onChange={(event) => onOutputs("video", event.target.checked)}
+          />
+          Video
+        </label>
+        <label className="inline-flex items-center gap-1.5">
+          <input
+            type="checkbox"
+            checked={range.audio}
+            onChange={(event) => onOutputs("audio", event.target.checked)}
+          />
+          Audio
+        </label>
       </div>
       <button
         type="button"

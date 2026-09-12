@@ -9,14 +9,18 @@ import { MediaPane } from "@/components/editors/timestamp-aligner/MediaPane";
 import {
   ALIGNER_MEDIA,
   ALIGNER_STORAGE_KEY,
+  DEFAULT_CUE_TEXT,
+  buildCutFile,
   cueAtTime,
-  defaultMarksMap,
-  emptyMarks,
+  cuesToText,
   formatClock,
+  importCutFile,
   isRangeComplete,
-  showCutCues,
-  type AlignerExport,
+  mergeMarks,
+  normalizeMarks,
+  parseCueList,
   type CueMarks,
+  type ShowCutCue,
   type TimeRange,
 } from "@/lib/show-cuts";
 
@@ -25,16 +29,23 @@ const NUDGE = {
   coarse: 1,
 } as const;
 
+const initialParsed = parseCueList(DEFAULT_CUE_TEXT);
+
 export function TimestampAlignerApp() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const objectUrls = useRef<string[]>([]);
   const loopUntil = useRef<number | null>(null);
   const selectedIndexRef = useRef(0);
-  const marksRef = useRef<Record<string, CueMarks>>(defaultMarksMap());
+  const marksRef = useRef<Record<string, CueMarks>>({});
+  const cuesRef = useRef<ShowCutCue[]>([]);
 
+  const [cueText, setCueText] = useState(DEFAULT_CUE_TEXT);
+  const [cues, setCues] = useState<ShowCutCue[]>(initialParsed.cues);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [marks, setMarks] = useState<Record<string, CueMarks>>(defaultMarksMap);
+  const [marks, setMarks] = useState<Record<string, CueMarks>>(() =>
+    mergeMarks(initialParsed.cues, {}),
+  );
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -42,30 +53,41 @@ export function TimestampAlignerApp() {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [videoLabel, setVideoLabel] = useState("");
   const [audioLabel, setAudioLabel] = useState("");
-  const [status, setStatus] = useState("Załaduj video i audio, potem stampuj in/out.");
+  const [status, setStatus] = useState("Wklej timestampy albo stampuj in/out na liście.");
   const [hydrated, setHydrated] = useState(false);
+  const [listOpen, setListOpen] = useState(false);
 
-  const selected = showCutCues[selectedIndex];
+  const selected = cues[selectedIndex];
   selectedIndexRef.current = selectedIndex;
   marksRef.current = marks;
+  cuesRef.current = cues;
 
   const stats = useMemo(() => {
-    const values = Object.values(marks);
     return {
-      preview: values.filter((item) => isRangeComplete(item.preview)).length,
-      explanation: values.filter((item) => isRangeComplete(item.explanation)).length,
-      total: showCutCues.length,
+      preview: cues.filter((cue) => isRangeComplete(marks[cue.id]?.preview)).length,
+      explanation: cues.filter((cue) =>
+        isRangeComplete(marks[cue.id]?.explanation),
+      ).length,
+      total: cues.length,
+      cuts: buildCutFile(cues, marks).cut.length,
     };
-  }, [marks]);
+  }, [cues, marks]);
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(ALIGNER_STORAGE_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw) as { marks?: Record<string, CueMarks> };
-        if (parsed.marks) {
-          setMarks({ ...defaultMarksMap(), ...parsed.marks });
-        }
+        const parsed = JSON.parse(raw) as {
+          cueText?: string;
+          cues?: ShowCutCue[];
+          marks?: Record<string, CueMarks>;
+        };
+        const nextCues = parsed.cues?.length
+          ? parsed.cues
+          : parseCueList(parsed.cueText || DEFAULT_CUE_TEXT).cues;
+        setCueText(parsed.cueText || cuesToText(nextCues));
+        setCues(nextCues);
+        setMarks(mergeMarks(nextCues, parsed.marks ?? {}));
       }
     } catch {
       // keep defaults
@@ -77,9 +99,14 @@ export function TimestampAlignerApp() {
     if (!hydrated) return;
     localStorage.setItem(
       ALIGNER_STORAGE_KEY,
-      JSON.stringify({ marks, updatedAt: new Date().toISOString() }),
+      JSON.stringify({
+        cueText,
+        cues,
+        marks,
+        updatedAt: new Date().toISOString(),
+      }),
     );
-  }, [marks, hydrated]);
+  }, [cueText, cues, marks, hydrated]);
 
   useEffect(() => {
     let cancelled = false;
@@ -129,17 +156,14 @@ export function TimestampAlignerApp() {
     }
   }, [audioUrl]);
 
-  const seek = useCallback(
-    (time: number) => {
-      const next = Math.max(0, time);
-      const video = videoRef.current;
-      const audio = audioRef.current;
-      if (video) video.currentTime = next;
-      if (audio) audio.currentTime = next;
-      setCurrentTime(next);
-    },
-    [],
-  );
+  const seek = useCallback((time: number) => {
+    const next = Math.max(0, time);
+    const video = videoRef.current;
+    const audio = audioRef.current;
+    if (video) video.currentTime = next;
+    if (audio) audio.currentTime = next;
+    setCurrentTime(next);
+  }, []);
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;
@@ -184,9 +208,9 @@ export function TimestampAlignerApp() {
   }
 
   const updateRange = useCallback(
-    (id: string, kind: "preview" | "explanation", key: keyof TimeRange, value: number | null) => {
+    (id: string, kind: "preview" | "explanation", key: keyof TimeRange, value: number | boolean | null) => {
       setMarks((current) => {
-        const prev = current[id] ?? emptyMarks();
+        const prev = normalizeMarks(current[id]);
         return {
           ...current,
           [id]: {
@@ -204,7 +228,7 @@ export function TimestampAlignerApp() {
 
   const stamp = useCallback(
     (field: MarkField, index = selectedIndex) => {
-      const cue = showCutCues[index];
+      const cue = cuesRef.current[index];
       if (!cue) return;
       const time = videoRef.current?.currentTime ?? currentTime;
       const [kind, edge] = field.split("-") as ["preview" | "explanation", "start" | "end"];
@@ -237,9 +261,11 @@ export function TimestampAlignerApp() {
 
   const selectCue = useCallback(
     (index: number, jump = true) => {
-      const next = Math.min(showCutCues.length - 1, Math.max(0, index));
+      const list = cuesRef.current;
+      if (!list.length) return;
+      const next = Math.min(list.length - 1, Math.max(0, index));
       setSelectedIndex(next);
-      if (jump) seek(showCutCues[next].chapter);
+      if (jump) seek(list[next].chapter);
     },
     [seek],
   );
@@ -249,10 +275,38 @@ export function TimestampAlignerApp() {
     setMarks((current) => ({
       ...current,
       [selected.id]: {
-        ...(current[selected.id] ?? emptyMarks()),
+        ...normalizeMarks(current[selected.id]),
         notes: value,
       },
     }));
+  }
+
+  function handleOutputs(
+    kind: "preview" | "explanation",
+    key: "video" | "audio",
+    value: boolean,
+  ) {
+    if (!selected) return;
+    updateRange(selected.id, kind, key, value);
+  }
+
+  function applyCueText(text = cueText) {
+    const parsed = parseCueList(text);
+    if (!parsed.cues.length) {
+      setStatus(
+        parsed.errors.length
+          ? `Nie udało się sparsować listy (${parsed.errors.length} błędów)`
+          : "Brak timestampów do wczytania",
+      );
+      return;
+    }
+    setCueText(text);
+    setCues(parsed.cues);
+    setMarks((current) => mergeMarks(parsed.cues, current));
+    setSelectedIndex(0);
+    const extra = parsed.errors.length ? ` · pominięto ${parsed.errors.length}` : "";
+    setStatus(`Wczytano ${parsed.cues.length} cueów${extra}`);
+    setListOpen(false);
   }
 
   function rememberFile(file: File) {
@@ -261,62 +315,44 @@ export function TimestampAlignerApp() {
     return url;
   }
 
-  function buildExport(): AlignerExport {
-    return {
-      version: 1,
-      updatedAt: new Date().toISOString(),
-      source: {
-        video: videoLabel || ALIGNER_MEDIA.video,
-        audio: audioLabel || ALIGNER_MEDIA.audio,
-      },
-      cues: showCutCues.map((cue) => {
-        const mark = marks[cue.id] ?? emptyMarks();
-        return {
-          id: cue.id,
-          name: cue.name,
-          chapter: cue.chapter,
-          chapterLabel: cue.chapterLabel,
-          preview: mark.preview,
-          explanation: mark.explanation,
-          notes: mark.notes,
-        };
-      }),
-    };
-  }
-
   function downloadExport() {
-    const blob = new Blob([JSON.stringify(buildExport(), null, 2)], {
+    const payload = buildCutFile(cues, marks);
+    if (!payload.cut.length) {
+      setStatus("Brak kompletnych zakresów do eksportu");
+      return;
+    }
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "show-cuts-timestamps.json";
+    link.download = "cut.json";
     link.click();
     URL.revokeObjectURL(url);
-    setStatus("Zapisano show-cuts-timestamps.json");
+    setStatus(`Zapisano cut.json · ${payload.cut.length} clipów`);
   }
 
   async function copyExport() {
-    await navigator.clipboard.writeText(JSON.stringify(buildExport(), null, 2));
-    setStatus("JSON skopiowany do schowka");
+    const payload = buildCutFile(cues, marks);
+    if (!payload.cut.length) {
+      setStatus("Brak kompletnych zakresów do eksportu");
+      return;
+    }
+    await navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
+    setStatus(`JSON skopiowany · ${payload.cut.length} clipów`);
   }
 
   function importExport(file: File) {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const parsed = JSON.parse(String(reader.result)) as AlignerExport;
-        const next = defaultMarksMap();
-        for (const cue of parsed.cues ?? []) {
-          next[cue.id] = {
-            preview: cue.preview ?? emptyMarks().preview,
-            explanation: cue.explanation ?? emptyMarks().explanation,
-            notes: cue.notes ?? "",
-          };
-        }
-        setMarks(next);
-        setStatus("Wczytano znaczniki z JSON");
+        const parsed = importCutFile(JSON.parse(String(reader.result)));
+        setCues(parsed.cues);
+        setMarks(mergeMarks(parsed.cues, parsed.marks));
+        setCueText(parsed.cueText);
+        setSelectedIndex(0);
+        setStatus(`Wczytano ${parsed.cues.length} cueów z JSON`);
       } catch {
         setStatus("Nie udało się wczytać JSON");
       }
@@ -365,7 +401,8 @@ export function TimestampAlignerApp() {
       if (event.key === "e") playRange("explanation");
       if (event.key === "n") {
         const from = selectedIndexRef.current;
-        const next = showCutCues.findIndex((cue, index) => {
+        const list = cuesRef.current;
+        const next = list.findIndex((cue, index) => {
           if (index <= from) return false;
           const mark = marksRef.current[cue.id];
           return !isRangeComplete(mark?.preview) || !isRangeComplete(mark?.explanation);
@@ -397,7 +434,7 @@ export function TimestampAlignerApp() {
     };
   }, [videoUrl]);
 
-  const followIndex = cueAtTime(currentTime);
+  const followIndex = cueAtTime(cues, currentTime);
 
   return (
     <div className="min-h-dvh bg-black text-white">
@@ -411,26 +448,31 @@ export function TimestampAlignerApp() {
               Timestamp aligner
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-zinc-500">
-              Zaznacz preview i explanation dla 35 efektów. Znaczniki zapisują się
-              lokalnie i możesz je wyeksportować pod auto-cut.
+              Wklej chaptery, zaznacz preview i explanation, eksportuj{" "}
+              <span className="text-zinc-300">cut.json</span> pod auto-cut.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Stat label="Preview" value={`${stats.preview}/${stats.total}`} />
-            <Stat label="Explanation" value={`${stats.explanation}/${stats.total}`} />
-            <Stat
-              label="Playhead"
-              value={showCutCues[followIndex]?.name ?? "—"}
-            />
+            <Stat label="Preview" value={`${stats.preview}/${stats.total || "—"}`} />
+            <Stat label="Explanation" value={`${stats.explanation}/${stats.total || "—"}`} />
+            <Stat label="Cut clips" value={String(stats.cuts)} />
+            <Stat label="Playhead" value={cues[followIndex]?.name ?? "—"} />
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <button
             type="button"
+            onClick={() => setListOpen((open) => !open)}
+            className="border border-white/20 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em]"
+          >
+            {listOpen ? "Schowaj listę" : "Wklej timestampy"}
+          </button>
+          <button
+            type="button"
             onClick={downloadExport}
             className="border border-white bg-white px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-black"
           >
-            Export JSON
+            Export cut.json
           </button>
           <button
             type="button"
@@ -454,6 +496,39 @@ export function TimestampAlignerApp() {
           </label>
           <p className="text-xs text-zinc-500">{status}</p>
         </div>
+        {listOpen && (
+          <div className="mt-4 border border-white/10 bg-zinc-950 p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
+              Jedna linia: MM:SS nazwa
+            </p>
+            <textarea
+              value={cueText}
+              onChange={(event) => setCueText(event.target.value)}
+              rows={10}
+              className="mt-2 w-full resize-y border border-white/10 bg-black px-3 py-2 font-mono text-xs text-white outline-none focus:border-white/40"
+              placeholder={"00:00 Reverse Delay\n01:07 Formant Glide"}
+            />
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => applyCueText()}
+                className="border border-white bg-white px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-black"
+              >
+                Zastosuj listę
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setCueText(DEFAULT_CUE_TEXT);
+                  applyCueText(DEFAULT_CUE_TEXT);
+                }}
+                className="border border-white/20 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em]"
+              >
+                Przykład 35 wokali
+              </button>
+            </div>
+          </div>
+        )}
         <p className="mt-3 font-mono text-[11px] leading-relaxed text-zinc-600">
           space play · ←/→ 1s · shift+strzałka 0.1s · [ ] efekt · 1/2 preview · 3/4
           explanation · p/e odtwórz zakres · n następny pusty
@@ -471,6 +546,7 @@ export function TimestampAlignerApp() {
           currentTime={currentTime}
           duration={duration}
           playing={playing}
+          cues={cues}
           marks={marks}
           selectedIndex={selectedIndex}
           onSeek={seek}
@@ -495,6 +571,7 @@ export function TimestampAlignerApp() {
 
         <div className="flex min-h-[70vh] flex-col lg:sticky lg:top-4 lg:max-h-[calc(100dvh-2rem)]">
           <CueSheet
+            cues={cues}
             selectedIndex={selectedIndex}
             marks={marks}
             onSelect={selectCue}
@@ -503,6 +580,7 @@ export function TimestampAlignerApp() {
             onClear={clearField}
             onNotes={handleNotes}
             onPlayRange={playRange}
+            onOutputs={handleOutputs}
           />
         </div>
       </div>

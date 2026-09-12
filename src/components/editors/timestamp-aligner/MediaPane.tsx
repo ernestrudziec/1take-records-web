@@ -3,8 +3,8 @@
 import { useRef } from "react";
 import {
   formatClock,
-  showCutCues,
   type CueMarks,
+  type ShowCutCue,
 } from "@/lib/show-cuts";
 
 type MediaPaneProps = {
@@ -17,6 +17,7 @@ type MediaPaneProps = {
   currentTime: number;
   duration: number;
   playing: boolean;
+  cues: ShowCutCue[];
   marks: Record<string, CueMarks>;
   selectedIndex: number;
   onSeek: (time: number) => void;
@@ -37,6 +38,7 @@ export function MediaPane({
   currentTime,
   duration,
   playing,
+  cues,
   marks,
   selectedIndex,
   onSeek,
@@ -134,7 +136,7 @@ export function MediaPane({
         className="relative h-10 w-full border border-white/10 bg-zinc-950"
       >
         {duration > 0 &&
-          showCutCues.map((cue, index) => {
+          cues.map((cue, index) => {
             const mark = marks[cue.id];
             const preview = barRange(mark?.preview, duration);
             const explanation = barRange(mark?.explanation, duration);
