@@ -21,6 +21,8 @@ type CueSheetProps = {
   onSeekMark: (time: number) => void;
   onClear: (field: MarkField) => void;
   onNudge: (field: MarkField, delta: number, index?: number) => void;
+  nudgeMs: number;
+  onNudgeMsChange: (value: number) => void;
   onNotes: (value: string) => void;
   onPlayRange: (kind: "preview" | "explanation", index?: number) => void;
   onOutputs: (kind: "preview" | "explanation", key: "video" | "audio", value: boolean) => void;
@@ -35,11 +37,14 @@ export function CueSheet({
   onSeekMark,
   onClear,
   onNudge,
+  nudgeMs,
+  onNudgeMsChange,
   onNotes,
   onPlayRange,
   onOutputs,
 }: CueSheetProps) {
   const rowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
+  const stepSeconds = Math.max(1, nudgeMs) / 1000;
   const selected = cues[selectedIndex];
   const selectedMarks = selected ? marks[selected.id] : undefined;
 
@@ -83,7 +88,7 @@ export function CueSheet({
             onStamp={onStamp}
             onSeekMark={onSeekMark}
             onClear={onClear}
-            onNudge={onNudge}
+            onNudge={(field, delta) => onNudge(field, delta * stepSeconds)}
             onPlay={() => onPlayRange("preview")}
             onOutputs={(key, value) => onOutputs("preview", key, value)}
           />
@@ -96,7 +101,7 @@ export function CueSheet({
             onStamp={onStamp}
             onSeekMark={onSeekMark}
             onClear={onClear}
-            onNudge={onNudge}
+            onNudge={(field, delta) => onNudge(field, delta * stepSeconds)}
             onPlay={() => onPlayRange("explanation")}
             onOutputs={(key, value) => onOutputs("explanation", key, value)}
           />
@@ -114,6 +119,25 @@ export function CueSheet({
           />
         </label>
       </div>
+
+      <label className="flex items-center gap-3 border border-white/10 bg-zinc-950 px-3 py-2">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
+          Krok −/+
+        </span>
+        <input
+          type="number"
+          min={1}
+          step={1}
+          value={nudgeMs}
+          onChange={(event) => {
+            const next = Number(event.target.value);
+            if (Number.isNaN(next)) return;
+            onNudgeMsChange(Math.max(1, Math.round(next)));
+          }}
+          className="w-24 border border-white/10 bg-black px-2 py-1.5 font-mono text-sm text-white outline-none focus:border-white/40"
+        />
+        <span className="text-xs text-zinc-500">ms</span>
+      </label>
 
       <div className="min-h-0 flex-1 overflow-auto border border-white/10">
         <table className="w-full min-w-160 border-collapse text-left text-xs">
@@ -165,7 +189,7 @@ export function CueSheet({
                     }}
                     onSeek={onSeekMark}
                     onPlay={() => onPlayRange("preview", index)}
-                    onNudge={(delta) => onNudge("preview-start", delta, index)}
+                    onNudge={(delta) => onNudge("preview-start", delta * stepSeconds, index)}
                   />
                   <StampCell
                     value={mark.preview.end}
@@ -175,7 +199,7 @@ export function CueSheet({
                       onStamp("preview-end", index);
                     }}
                     onSeek={onSeekMark}
-                    onNudge={(delta) => onNudge("preview-end", delta, index)}
+                    onNudge={(delta) => onNudge("preview-end", delta * stepSeconds, index)}
                   />
                   <StampCell
                     value={mark.explanation.start}
@@ -185,7 +209,7 @@ export function CueSheet({
                       onStamp("explanation-start", index);
                     }}
                     onSeek={onSeekMark}
-                    onNudge={(delta) => onNudge("explanation-start", delta, index)}
+                    onNudge={(delta) => onNudge("explanation-start", delta * stepSeconds, index)}
                   />
                   <StampCell
                     value={mark.explanation.end}
@@ -195,7 +219,7 @@ export function CueSheet({
                       onStamp("explanation-end", index);
                     }}
                     onSeek={onSeekMark}
-                    onNudge={(delta) => onNudge("explanation-end", delta, index)}
+                    onNudge={(delta) => onNudge("explanation-end", delta * stepSeconds, index)}
                   />
                 </tr>
               );

@@ -30,11 +30,6 @@ import {
   type TimeRange,
 } from "@/lib/show-cuts";
 
-const NUDGE = {
-  fine: 0.1,
-  coarse: 1,
-} as const;
-
 export function TimestampAlignerApp() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -53,6 +48,7 @@ export function TimestampAlignerApp() {
   const [previewStartInput, setPreviewStartInput] = useState("0");
   const [previewEndInput, setPreviewEndInput] = useState("8");
   const [previewEndAtNext, setPreviewEndAtNext] = useState(false);
+  const [nudgeMs, setNudgeMs] = useState(1000);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -93,6 +89,7 @@ export function TimestampAlignerApp() {
             endInput?: string;
             endAtNext?: boolean;
           };
+          nudgeMs?: number;
         };
         const nextCues = parsed.cues?.length
           ? parsed.cues
@@ -104,6 +101,9 @@ export function TimestampAlignerApp() {
           setPreviewStartInput(parsed.previewDefaults.startInput ?? "0");
           setPreviewEndInput(parsed.previewDefaults.endInput ?? "8");
           setPreviewEndAtNext(Boolean(parsed.previewDefaults.endAtNext));
+        }
+        if (typeof parsed.nudgeMs === "number" && parsed.nudgeMs > 0) {
+          setNudgeMs(parsed.nudgeMs);
         }
       }
     } catch {
@@ -125,10 +125,11 @@ export function TimestampAlignerApp() {
           endInput: previewEndInput,
           endAtNext: previewEndAtNext,
         },
+        nudgeMs,
         updatedAt: new Date().toISOString(),
       }),
     );
-  }, [cueText, cues, marks, previewStartInput, previewEndInput, previewEndAtNext, hydrated]);
+  }, [cueText, cues, marks, previewStartInput, previewEndInput, previewEndAtNext, nudgeMs, hydrated]);
 
   useEffect(() => {
     let cancelled = false;
@@ -478,7 +479,7 @@ export function TimestampAlignerApp() {
 
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
         event.preventDefault();
-        const delta = event.shiftKey ? NUDGE.fine : NUDGE.coarse;
+        const delta = Math.max(1, nudgeMs) / 1000;
         const time = videoRef.current?.currentTime ?? 0;
         seek(time + (event.key === "ArrowRight" ? delta : -delta));
         return;
@@ -516,7 +517,7 @@ export function TimestampAlignerApp() {
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [playRange, seek, selectCue, stamp, togglePlay]);
+  }, [nudgeMs, playRange, seek, selectCue, stamp, togglePlay]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -696,7 +697,12 @@ export function TimestampAlignerApp() {
           marks={marks}
           selectedIndex={selectedIndex}
           onSeek={seek}
-          onNudge={(delta) => seek((videoRef.current?.currentTime ?? currentTime) + delta)}
+          onNudge={(delta) =>
+            seek(
+              (videoRef.current?.currentTime ?? currentTime) +
+                (delta * Math.max(1, nudgeMs)) / 1000,
+            )
+          }
           onTogglePlay={togglePlay}
           onVideoFile={(file) => {
             setVideoUrl(rememberFile(file));
@@ -726,6 +732,8 @@ export function TimestampAlignerApp() {
             onSeekMark={seek}
             onClear={clearField}
             onNudge={nudgeField}
+            nudgeMs={nudgeMs}
+            onNudgeMsChange={setNudgeMs}
             onNotes={handleNotes}
             onPlayRange={playRange}
             onOutputs={handleOutputs}

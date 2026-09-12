@@ -126,7 +126,7 @@ export function MediaPane({
             onClick={() => onNudge(-1)}
             className="cursor-pointer border border-white/20 px-2.5 py-1.5 text-xs hover:bg-white hover:text-black"
           >
-            −1s
+            −
           </button>
           <button
             type="button"
@@ -140,7 +140,7 @@ export function MediaPane({
             onClick={() => onNudge(1)}
             className="cursor-pointer border border-white/20 px-2.5 py-1.5 text-xs hover:bg-white hover:text-black"
           >
-            +1s
+            +
           </button>
         </div>
         <span className="text-zinc-500">{formatClock(duration || null)}</span>
