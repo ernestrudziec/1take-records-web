@@ -91,6 +91,38 @@ type EffectTileProps = {
 
 const MAX_TILT = 11;
 
+function GradientIcon({
+  icon: Icon,
+  gradientId,
+  stops,
+}: {
+  icon: LucideIcon;
+  gradientId: string;
+  stops: [string, string, string];
+}) {
+  const [from, via, to] = stops;
+
+  return (
+    <>
+      <svg width="0" height="0" aria-hidden className="absolute">
+        <title>Gradient</title>
+        <defs>
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={from} />
+            <stop offset="50%" stopColor={via} />
+            <stop offset="100%" stopColor={to} />
+          </linearGradient>
+        </defs>
+      </svg>
+      <Icon
+        className="relative h-full w-full"
+        strokeWidth={1.75}
+        color={`url(#${gradientId})`}
+      />
+    </>
+  );
+}
+
 export function EffectTile({
   effect,
   playing,
@@ -172,7 +204,7 @@ export function EffectTile({
             style={{ transform: "translateZ(20px)" }}
           >
             <div
-              className="relative isolate h-9 w-9 sm:h-12 sm:w-12"
+              className="relative h-9 w-9 sm:h-12 sm:w-12"
               style={{
                 filter: playing
                   ? `drop-shadow(0 0 16px ${glow}99)`
@@ -181,18 +213,18 @@ export function EffectTile({
                     : `drop-shadow(0 0 14px ${glow}75)`,
               }}
             >
-              <div
-                className={`absolute inset-0 bg-linear-to-br ${effect.gradient}`}
-                aria-hidden
-              />
-              <Icon
-                className="relative h-full w-full text-black mix-blend-destination-in"
-                strokeWidth={1.75}
+              <GradientIcon
+                icon={Icon}
+                gradientId={`effect-icon-${effect.slug}`}
+                stops={effect.stops}
               />
             </div>
             <h3
-              className={`mt-1.5 bg-linear-to-br ${effect.gradient} bg-clip-text text-[11px] font-semibold leading-tight text-transparent sm:mt-2 sm:text-sm`}
+              className="mt-1.5 text-[11px] font-semibold leading-tight text-transparent sm:mt-2 sm:text-sm"
               style={{
+                backgroundImage: `linear-gradient(135deg, ${effect.stops[0]}, ${effect.stops[1]}, ${effect.stops[2]})`,
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
                 filter: playing
                   ? `drop-shadow(0 0 8px ${glow}bb)`
                   : hovering
