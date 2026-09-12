@@ -224,10 +224,8 @@ export function EffectTile({
               }}
               aria-pressed={playing}
               aria-label={playing ? "Stop preview" : "Preview"}
-              className={`inline-flex cursor-pointer items-center justify-center border-r border-white/10 py-2 transition-colors sm:py-2.5 ${
-                playing
-                  ? "bg-white text-black"
-                  : "text-zinc-300 hover:bg-white hover:text-black"
+              className={`inline-flex cursor-pointer items-center justify-center border-r border-white/10 bg-transparent py-2 transition-colors hover:bg-transparent active:bg-transparent sm:py-2.5 ${
+                playing ? "text-white" : "text-zinc-300 hover:text-white"
               }`}
             >
               {playing ? (
@@ -243,7 +241,7 @@ export function EffectTile({
                 onTutorial();
               }}
               aria-label="Tutorial"
-              className="inline-flex cursor-pointer items-center justify-center py-2 text-zinc-300 transition-colors hover:bg-white hover:text-black sm:py-2.5"
+              className="inline-flex cursor-pointer items-center justify-center bg-transparent py-2 text-zinc-300 transition-colors hover:bg-transparent hover:text-white active:bg-transparent sm:py-2.5"
             >
               <Video className="h-3.5 w-3.5" strokeWidth={2} />
             </button>
