@@ -10,6 +10,8 @@ import {
   ALIGNER_MEDIA,
   ALIGNER_STORAGE_KEY,
   DEFAULT_CUE_TEXT,
+  DEFAULT_PREVIEW_DEFAULTS,
+  applyPreviewDefaults,
   buildCutFile,
   cueAtTime,
   cuesToText,
@@ -19,6 +21,7 @@ import {
   mergeMarks,
   normalizeMarks,
   parseCueList,
+  parseOffset,
   type CueMarks,
   type ShowCutCue,
   type TimeRange,
@@ -44,8 +47,16 @@ export function TimestampAlignerApp() {
   const [cues, setCues] = useState<ShowCutCue[]>(initialParsed.cues);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [marks, setMarks] = useState<Record<string, CueMarks>>(() =>
-    mergeMarks(initialParsed.cues, {}),
+    applyPreviewDefaults(
+      initialParsed.cues,
+      {},
+      DEFAULT_PREVIEW_DEFAULTS,
+      "all",
+    ),
   );
+  const [previewStartInput, setPreviewStartInput] = useState("0");
+  const [previewEndInput, setPreviewEndInput] = useState("8");
+  const [previewEndAtNext, setPreviewEndAtNext] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -81,6 +92,11 @@ export function TimestampAlignerApp() {
           cueText?: string;
           cues?: ShowCutCue[];
           marks?: Record<string, CueMarks>;
+          previewDefaults?: {
+            startInput?: string;
+            endInput?: string;
+            endAtNext?: boolean;
+          };
         };
         const nextCues = parsed.cues?.length
           ? parsed.cues
@@ -88,6 +104,11 @@ export function TimestampAlignerApp() {
         setCueText(parsed.cueText || cuesToText(nextCues));
         setCues(nextCues);
         setMarks(mergeMarks(nextCues, parsed.marks ?? {}));
+        if (parsed.previewDefaults) {
+          setPreviewStartInput(parsed.previewDefaults.startInput ?? "0");
+          setPreviewEndInput(parsed.previewDefaults.endInput ?? "8");
+          setPreviewEndAtNext(Boolean(parsed.previewDefaults.endAtNext));
+        }
       }
     } catch {
       // keep defaults
@@ -103,10 +124,15 @@ export function TimestampAlignerApp() {
         cueText,
         cues,
         marks,
+        previewDefaults: {
+          startInput: previewStartInput,
+          endInput: previewEndInput,
+          endAtNext: previewEndAtNext,
+        },
         updatedAt: new Date().toISOString(),
       }),
     );
-  }, [cueText, cues, marks, hydrated]);
+  }, [cueText, cues, marks, previewStartInput, previewEndInput, previewEndAtNext, hydrated]);
 
   useEffect(() => {
     let cancelled = false;
@@ -290,6 +316,33 @@ export function TimestampAlignerApp() {
     updateRange(selected.id, kind, key, value);
   }
 
+  function readPreviewDefaults() {
+    const startOffset = parseOffset(previewStartInput);
+    const endOffset = parseOffset(previewEndInput);
+    if (Number.isNaN(startOffset) || Number.isNaN(endOffset)) {
+      setStatus("Zły default preview — użyj sekund albo MM:SS");
+      return null;
+    }
+    return {
+      startOffset,
+      endOffset,
+      endAtNext: previewEndAtNext,
+    };
+  }
+
+  function fillPreviewDefaults(mode: "empty" | "all") {
+    const defaults = readPreviewDefaults();
+    if (!defaults) return;
+    setMarks((current) =>
+      applyPreviewDefaults(cues, current, defaults, mode, duration || undefined),
+    );
+    setStatus(
+      mode === "all"
+        ? `Nadpisano preview dla ${cues.length} cueów`
+        : `Wypełniono puste preview (${cues.length} cueów)`,
+    );
+  }
+
   function applyCueText(text = cueText) {
     const parsed = parseCueList(text);
     if (!parsed.cues.length) {
@@ -300,9 +353,18 @@ export function TimestampAlignerApp() {
       );
       return;
     }
+    const defaults = readPreviewDefaults() ?? DEFAULT_PREVIEW_DEFAULTS;
     setCueText(text);
     setCues(parsed.cues);
-    setMarks((current) => mergeMarks(parsed.cues, current));
+    setMarks((current) =>
+      applyPreviewDefaults(
+        parsed.cues,
+        mergeMarks(parsed.cues, current),
+        defaults,
+        "empty",
+        duration || undefined,
+      ),
+    );
     setSelectedIndex(0);
     const extra = parsed.errors.length ? ` · pominięto ${parsed.errors.length}` : "";
     setStatus(`Wczytano ${parsed.cues.length} cueów${extra}`);
@@ -495,6 +557,59 @@ export function TimestampAlignerApp() {
             />
           </label>
           <p className="text-xs text-zinc-500">{status}</p>
+        </div>
+        <div className="mt-4 flex flex-wrap items-end gap-3 border border-white/10 bg-zinc-950 px-3 py-3">
+          <p className="w-full text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500 sm:w-auto sm:pb-2">
+            Default preview
+          </p>
+          <label className="flex flex-col gap-1">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-zinc-500">
+              Start +chapter
+            </span>
+            <input
+              value={previewStartInput}
+              onChange={(event) => setPreviewStartInput(event.target.value)}
+              placeholder="0"
+              className="w-24 border border-white/10 bg-black px-2 py-1.5 font-mono text-sm text-white outline-none focus:border-white/40"
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-zinc-500">
+              End +chapter
+            </span>
+            <input
+              value={previewEndInput}
+              onChange={(event) => setPreviewEndInput(event.target.value)}
+              placeholder="8"
+              disabled={previewEndAtNext}
+              className="w-24 border border-white/10 bg-black px-2 py-1.5 font-mono text-sm text-white outline-none focus:border-white/40 disabled:opacity-40"
+            />
+          </label>
+          <label className="flex items-center gap-2 pb-2 text-[10px] uppercase tracking-[0.14em] text-zinc-400">
+            <input
+              type="checkbox"
+              checked={previewEndAtNext}
+              onChange={(event) => setPreviewEndAtNext(event.target.checked)}
+            />
+            Do następnego chaptera
+          </label>
+          <button
+            type="button"
+            onClick={() => fillPreviewDefaults("empty")}
+            className="border border-white/20 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em]"
+          >
+            Wypełnij puste
+          </button>
+          <button
+            type="button"
+            onClick={() => fillPreviewDefaults("all")}
+            className="border border-white bg-white px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-black"
+          >
+            Nadpisz wszystkie
+          </button>
+          <p className="w-full text-[11px] text-zinc-600">
+            Offset od chaptera — sekundy albo MM:SS. Np. start 0, end 8 = pierwsze 8 s każdej sekcji.
+          </p>
         </div>
         {listOpen && (
           <div className="mt-4 border border-white/10 bg-zinc-950 p-3">

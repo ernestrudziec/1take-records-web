@@ -193,6 +193,67 @@ export function mergeMarks(
   );
 }
 
+export type PreviewDefaults = {
+  startOffset: number;
+  endOffset: number;
+  endAtNext: boolean;
+};
+
+export const DEFAULT_PREVIEW_DEFAULTS: PreviewDefaults = {
+  startOffset: 0,
+  endOffset: 8,
+  endAtNext: false,
+};
+
+export function parseOffset(value: string) {
+  const text = value.trim().replace(/^\+/, "");
+  if (!text) return 0;
+  if (text.includes(":")) return parseClock(text);
+  const seconds = Number(text.replace(",", "."));
+  return Number.isNaN(seconds) ? Number.NaN : seconds;
+}
+
+export function applyPreviewDefaults(
+  cues: ShowCutCue[],
+  previous: Record<string, CueMarks>,
+  defaults: PreviewDefaults,
+  mode: "empty" | "all" = "empty",
+  duration = Number.POSITIVE_INFINITY,
+) {
+  return Object.fromEntries(
+    cues.map((cue, index) => {
+      const current = normalizeMarks(previous[cue.id]);
+      const hasPreview = isRangeComplete(current.preview);
+      if (mode === "empty" && hasPreview) {
+        return [cue.id, current];
+      }
+
+      const start = Math.max(0, cue.chapter + defaults.startOffset);
+      const nextChapter = cues[index + 1]?.chapter;
+      let end = cue.chapter + defaults.endOffset;
+      if (defaults.endAtNext && nextChapter !== undefined) {
+        end = nextChapter;
+      }
+      end = Math.min(end, duration);
+      if (end <= start) {
+        end = Math.min(start + Math.max(0.25, defaults.endOffset), duration);
+      }
+
+      return [
+        cue.id,
+        {
+          ...current,
+          preview: {
+            ...current.preview,
+            start,
+            end,
+          },
+        },
+      ];
+    }),
+  );
+}
+
 export function cueAtTime(cues: ShowCutCue[], time: number) {
   for (let i = cues.length - 1; i >= 0; i -= 1) {
     if (time >= cues[i].chapter) return i;
