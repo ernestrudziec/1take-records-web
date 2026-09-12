@@ -11,7 +11,9 @@ const socialLinks = [
 
 export function Footer() {
   const pathname = usePathname();
-  if (pathname.startsWith("/booking")) return null;
+  if (pathname.startsWith("/booking") || pathname.startsWith("/editors")) {
+    return null;
+  }
 
   return (
     <footer className="border-t border-white/10 bg-black text-center">

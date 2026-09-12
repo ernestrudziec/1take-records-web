@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local editor media (large mp4s)
+/public/editors/timestamp-aligner/media/*
+!/public/editors/timestamp-aligner/media/.gitkeep
