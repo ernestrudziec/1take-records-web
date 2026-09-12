@@ -18,4 +18,8 @@ export const siteConfig = {
     linkedin: "https://linkedin.com/company/1take.pl",
   },
   address: studioLocation.fullAddress,
+  tools: {
+    beatsDownloaderReleases:
+      "https://github.com/ernestrudziec/1take-records/releases",
+  },
 } as const;

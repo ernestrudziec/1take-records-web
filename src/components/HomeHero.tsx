@@ -106,6 +106,13 @@ export function HomeHero() {
           </a>
           <a
             data-hero-cta
+            href="#narzedzia"
+            className="inline-flex items-center justify-center border border-white/20 px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50 sm:py-3"
+          >
+            Narzędzia
+          </a>
+          <a
+            data-hero-cta
             href="#o-nas"
             className="inline-flex items-center justify-center border border-white/20 px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-white/50 sm:py-3"
           >

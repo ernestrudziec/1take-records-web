@@ -1,6 +1,7 @@
 import { HomeAbout } from "@/components/home/HomeAbout";
 import { HomeContact } from "@/components/home/HomeContact";
 import { HomeStudio } from "@/components/home/HomeStudio";
+import { HomeTools } from "@/components/home/HomeTools";
 import { HomeHero } from "@/components/HomeHero";
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
     <>
       <HomeHero />
       <HomeStudio />
+      <HomeTools />
       <HomeAbout />
       <HomeContact />
     </>
