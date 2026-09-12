@@ -93,33 +93,25 @@ const MAX_TILT = 11;
 
 function GradientIcon({
   icon: Icon,
-  gradientId,
   stops,
 }: {
   icon: LucideIcon;
-  gradientId: string;
   stops: [string, string, string];
 }) {
   const [from, via, to] = stops;
 
   return (
-    <>
-      <svg width="0" height="0" aria-hidden className="absolute">
-        <title>Gradient</title>
-        <defs>
-          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor={from} />
-            <stop offset="50%" stopColor={via} />
-            <stop offset="100%" stopColor={to} />
-          </linearGradient>
-        </defs>
-      </svg>
-      <Icon
-        className="relative h-full w-full"
-        strokeWidth={1.75}
-        color={`url(#${gradientId})`}
+    <span className="relative isolate block h-full w-full">
+      <Icon className="h-full w-full text-white" strokeWidth={1.75} />
+      <span
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: `linear-gradient(135deg, ${from} 0%, ${via} 50%, ${to} 100%)`,
+          mixBlendMode: "source-in",
+        }}
+        aria-hidden
       />
-    </>
+    </span>
   );
 }
 
@@ -184,7 +176,7 @@ export function EffectTile({
               ? `radial-gradient(circle at 50% 38%, ${glow}26, transparent 62%)`
               : hovering
                 ? `radial-gradient(320px circle at ${tilt.px}% ${tilt.py}%, ${glow}21, transparent 48%)`
-                : `radial-gradient(280px circle at 50% 38%, ${glow}1c, transparent 52%)`,
+                : `radial-gradient(280px circle at 50% 38%, ${glow}1a, transparent 52%)`,
             boxShadow: playing
               ? `inset 0 0 0 1px ${glow}, inset 0 0 28px ${glow}30, 0 0 20px ${glow}40`
               : undefined,
@@ -210,14 +202,10 @@ export function EffectTile({
                   ? `drop-shadow(0 0 16px ${glow}99)`
                   : hovering
                     ? `drop-shadow(0 0 17px ${glow}8c)`
-                    : `drop-shadow(0 0 14px ${glow}75)`,
+                    : `drop-shadow(0 0 13px ${glow}6f)`,
               }}
             >
-              <GradientIcon
-                icon={Icon}
-                gradientId={`effect-icon-${effect.slug}`}
-                stops={effect.stops}
-              />
+              <GradientIcon icon={Icon} stops={effect.stops} />
             </div>
             <h3
               className="mt-1.5 text-[11px] font-semibold leading-tight text-transparent sm:mt-2 sm:text-sm"
@@ -229,7 +217,7 @@ export function EffectTile({
                   ? `drop-shadow(0 0 8px ${glow}bb)`
                   : hovering
                     ? `drop-shadow(0 0 8px ${glow}bb)`
-                    : `drop-shadow(0 0 7px ${glow}9c)`,
+                    : `drop-shadow(0 0 7px ${glow}94)`,
               }}
             >
               {effect.name}

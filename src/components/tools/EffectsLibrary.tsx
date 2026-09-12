@@ -69,7 +69,7 @@ export function EffectsLibrary() {
           </div>
 
           <div className="flex min-h-0 flex-1 items-center justify-center overflow-visible">
-            <div className="grid w-[min(100vw,calc((100dvh-2.5rem)*5/7))] grid-cols-5 grid-rows-7 gap-px bg-white/10 p-px lg:w-[min(100vw,calc((100dvh-2.5rem)*7/5))] lg:grid-cols-7 lg:grid-rows-5">
+            <div className="grid w-[min(100vw,calc((100dvh-2.5rem-30px)*5/7+20px))] grid-cols-5 grid-rows-7 gap-[5px] lg:w-[min(100vw,calc((100dvh-2.5rem-20px)*7/5+30px))] lg:grid-cols-7 lg:grid-rows-5">
               {effects.map((effect) => (
                 <EffectTile
                   key={effect.slug}
