@@ -31,47 +31,11 @@ export type CutFile = {
   cut: CutItem[];
 };
 
-export const ALIGNER_STORAGE_KEY = "1take.show-cuts.aligner.v2";
+export const ALIGNER_STORAGE_KEY = "1take.show-cuts.aligner.v3";
 export const ALIGNER_MEDIA = {
   video: "/editors/timestamp-aligner/media/video.mp4",
   audio: "/editors/timestamp-aligner/media/audio.mp4",
 } as const;
-
-export const DEFAULT_CUE_TEXT = `00:00 Reverse Delay
-01:07 Formant Glide
-02:32 Call & Response
-03:44 Haunting Vocal
-04:54 Demon Time
-06:04 Reverse Reverb
-07:05 Reverse Reverb +
-08:31 Delay Transition
-10:24 Vocal Synth
-11:23 Vocal Rapture
-12:26 Impactful Vocals
-14:01 Gap Filler
-16:01 Pretty Vocals
-17:36 Pretty Slap
-18:28 Stretch & Stutter
-19:47 Gated Fun
-20:43 Ambient Pad
-22:06 Distant Voicemail
-22:58 Trippy Delays
-24:23 Movements
-25:38 Buggin’ Out
-26:35 Transition Riser
-28:04 Melody Tails
-29:18 Gated Effects
-30:38 Shifted Slap
-31:35 Distorted Adlibs
-32:47 Dark Reverb
-33:46 Dark Ambience
-34:47 Flanger Delays
-35:42 Megaphone
-36:32 Build Up
-38:05 Throw
-39:14 Vocal Samples
-40:58 Distorted Room
-41:57 Sidechain Stutter`;
 
 const CUE_LINE =
   /^\s*(?:\d+[\.)]\s*)?(\d{1,2}:\d{2}(?::\d{2}(?:\.\d+)?)?)\s+[-–—:]?\s*(.+?)\s*$/;

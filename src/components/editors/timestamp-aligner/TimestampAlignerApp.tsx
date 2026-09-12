@@ -9,7 +9,6 @@ import { MediaPane } from "@/components/editors/timestamp-aligner/MediaPane";
 import {
   ALIGNER_MEDIA,
   ALIGNER_STORAGE_KEY,
-  DEFAULT_CUE_TEXT,
   DEFAULT_PREVIEW_DEFAULTS,
   applyPreviewDefaults,
   buildCutFile,
@@ -32,8 +31,6 @@ const NUDGE = {
   coarse: 1,
 } as const;
 
-const initialParsed = parseCueList(DEFAULT_CUE_TEXT);
-
 export function TimestampAlignerApp() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -43,17 +40,10 @@ export function TimestampAlignerApp() {
   const marksRef = useRef<Record<string, CueMarks>>({});
   const cuesRef = useRef<ShowCutCue[]>([]);
 
-  const [cueText, setCueText] = useState(DEFAULT_CUE_TEXT);
-  const [cues, setCues] = useState<ShowCutCue[]>(initialParsed.cues);
+  const [cueText, setCueText] = useState("");
+  const [cues, setCues] = useState<ShowCutCue[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [marks, setMarks] = useState<Record<string, CueMarks>>(() =>
-    applyPreviewDefaults(
-      initialParsed.cues,
-      {},
-      DEFAULT_PREVIEW_DEFAULTS,
-      "all",
-    ),
-  );
+  const [marks, setMarks] = useState<Record<string, CueMarks>>({});
   const [previewStartInput, setPreviewStartInput] = useState("0");
   const [previewEndInput, setPreviewEndInput] = useState("8");
   const [previewEndAtNext, setPreviewEndAtNext] = useState(false);
@@ -66,7 +56,7 @@ export function TimestampAlignerApp() {
   const [audioLabel, setAudioLabel] = useState("");
   const [status, setStatus] = useState("Wklej timestampy albo stampuj in/out na liście.");
   const [hydrated, setHydrated] = useState(false);
-  const [listOpen, setListOpen] = useState(false);
+  const [listOpen, setListOpen] = useState(true);
 
   const selected = cues[selectedIndex];
   selectedIndexRef.current = selectedIndex;
@@ -100,7 +90,7 @@ export function TimestampAlignerApp() {
         };
         const nextCues = parsed.cues?.length
           ? parsed.cues
-          : parseCueList(parsed.cueText || DEFAULT_CUE_TEXT).cues;
+          : parseCueList(parsed.cueText || "").cues;
         setCueText(parsed.cueText || cuesToText(nextCues));
         setCues(nextCues);
         setMarks(mergeMarks(nextCues, parsed.marks ?? {}));
@@ -621,7 +611,7 @@ export function TimestampAlignerApp() {
               onChange={(event) => setCueText(event.target.value)}
               rows={10}
               className="mt-2 w-full resize-y border border-white/10 bg-black px-3 py-2 font-mono text-xs text-white outline-none focus:border-white/40"
-              placeholder={"00:00 Reverse Delay\n01:07 Formant Glide"}
+              placeholder={"00:00 Nazwa efektu\n01:07 Kolejny efekt"}
             />
             <div className="mt-2 flex flex-wrap gap-2">
               <button
@@ -630,16 +620,6 @@ export function TimestampAlignerApp() {
                 className="border border-white bg-white px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-black"
               >
                 Zastosuj listę
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setCueText(DEFAULT_CUE_TEXT);
-                  applyCueText(DEFAULT_CUE_TEXT);
-                }}
-                className="border border-white/20 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em]"
-              >
-                Przykład 35 wokali
               </button>
             </div>
           </div>
