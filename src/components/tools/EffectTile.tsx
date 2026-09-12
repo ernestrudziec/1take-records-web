@@ -93,25 +93,37 @@ const MAX_TILT = 11;
 
 function GradientIcon({
   icon: Icon,
+  gradientId,
   stops,
 }: {
   icon: LucideIcon;
+  gradientId: string;
   stops: [string, string, string];
 }) {
   const [from, via, to] = stops;
 
   return (
-    <span className="relative isolate block h-full w-full">
-      <Icon className="h-full w-full text-white" strokeWidth={1.75} />
-      <span
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage: `linear-gradient(135deg, ${from} 0%, ${via} 50%, ${to} 100%)`,
-          mixBlendMode: "source-in",
-        }}
-        aria-hidden
-      />
-    </span>
+    <Icon
+      aria-hidden
+      className="h-full w-full"
+      strokeWidth={1.75}
+      color={`url(#${gradientId})`}
+    >
+      <defs>
+        <linearGradient
+          id={gradientId}
+          gradientUnits="userSpaceOnUse"
+          x1="0"
+          y1="0"
+          x2="24"
+          y2="24"
+        >
+          <stop offset="0%" stopColor={from} />
+          <stop offset="50%" stopColor={via} />
+          <stop offset="100%" stopColor={to} />
+        </linearGradient>
+      </defs>
+    </Icon>
   );
 }
 
@@ -192,8 +204,7 @@ export function EffectTile({
             onClick={onPreview}
             aria-pressed={playing}
             aria-label={`${effect.name}, ${playing ? "stop preview" : "preview"}`}
-            className="relative flex min-h-0 flex-1 cursor-pointer flex-col items-center justify-center px-2 text-center"
-            style={{ transform: "translateZ(20px)" }}
+            className="relative z-0 flex min-h-0 flex-1 cursor-pointer flex-col items-center justify-center px-2 text-center"
           >
             <div
               className="relative h-9 w-9 sm:h-12 sm:w-12"
@@ -205,7 +216,11 @@ export function EffectTile({
                     : `drop-shadow(0 0 13px ${glow}6f)`,
               }}
             >
-              <GradientIcon icon={Icon} stops={effect.stops} />
+              <GradientIcon
+                icon={Icon}
+                gradientId={`effect-icon-${effect.slug}`}
+                stops={effect.stops}
+              />
             </div>
             <h3
               className="mt-1.5 text-[11px] font-semibold leading-tight text-transparent sm:mt-2 sm:text-sm"
@@ -224,10 +239,7 @@ export function EffectTile({
             </h3>
           </button>
 
-          <div
-            className="relative grid grid-cols-2 border-t border-white/10"
-            style={{ transform: "translateZ(16px)" }}
-          >
+          <div className="relative z-20 grid shrink-0 grid-cols-2 border-t border-white/10">
             <button
               type="button"
               onClick={(event) => {
@@ -236,14 +248,14 @@ export function EffectTile({
               }}
               aria-pressed={playing}
               aria-label={playing ? "Stop preview" : "Preview"}
-              className={`inline-flex cursor-pointer items-center justify-center border-r border-white/10 bg-transparent py-2 transition-colors hover:bg-transparent active:bg-transparent sm:py-2.5 ${
+              className={`flex h-11 w-full cursor-pointer items-center justify-center border-r border-white/10 bg-transparent transition-colors hover:bg-white/5 ${
                 playing ? "text-white" : "text-zinc-300 hover:text-white"
               }`}
             >
               {playing ? (
-                <Pause className="h-3.5 w-3.5" strokeWidth={2} />
+                <Pause className="pointer-events-none h-3.5 w-3.5" strokeWidth={2} />
               ) : (
-                <Play className="h-3.5 w-3.5" strokeWidth={2} />
+                <Play className="pointer-events-none h-3.5 w-3.5" strokeWidth={2} />
               )}
             </button>
             <button
@@ -253,9 +265,9 @@ export function EffectTile({
                 onTutorial();
               }}
               aria-label="Tutorial"
-              className="inline-flex cursor-pointer items-center justify-center bg-transparent py-2 text-zinc-300 transition-colors hover:bg-transparent hover:text-white active:bg-transparent sm:py-2.5"
+              className="flex h-11 w-full cursor-pointer items-center justify-center bg-transparent text-zinc-300 transition-colors hover:bg-white/5 hover:text-white"
             >
-              <Video className="h-3.5 w-3.5" strokeWidth={2} />
+              <Video className="pointer-events-none h-3.5 w-3.5" strokeWidth={2} />
             </button>
           </div>
         </div>
