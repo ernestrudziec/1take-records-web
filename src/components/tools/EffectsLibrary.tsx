@@ -42,10 +42,10 @@ export function EffectsLibrary() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-5 pb-16 sm:px-6">
+    <div className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
       {activeCategory && category ? (
         <>
-          <div className="mb-8 flex flex-col items-center gap-4 text-center">
+          <div className="mb-5 flex flex-col items-center gap-3 text-center">
             <button
               type="button"
               onClick={() => {
@@ -65,7 +65,7 @@ export function EffectsLibrary() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {effects.map((effect) => (
               <EffectTile
                 key={effect.slug}

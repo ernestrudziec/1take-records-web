@@ -1,0 +1,564 @@
+{
+  "cut": [
+    {
+      "filename": "reverse_delay_preview",
+      "name": "Reverse Delay",
+      "start": "00:00:01.50",
+      "end": "00:00:05.50",
+      "video": true,
+      "audio": true
+    },
+    {
+      "filename": "reverse_delay_tutorial",
+      "name": "Reverse Delay",
+      "start": "00:00:05.50",
+      "end": "00:01:10",
+      "video": true,
+      "audio": true
+    },
+    {
+      "filename": "formant_glide_preview",
+      "name": "Formant Glide",
+      "start": "00:01:10",
+      "end": "00:01:17",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "formant_glide_tutorial",
+      "name": "Formant Glide",
+      "start": "00:01:17",
+      "end": "00:02:34",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "call_and_response_preview",
+      "name": "Call & Response",
+      "start": "00:02:34",
+      "end": "00:02:36.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "call_and_response_tutorial",
+      "name": "Call & Response",
+      "start": "00:02:36.50",
+      "end": "00:03:46",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "haunting_vocal_preview",
+      "name": "Haunting Vocal",
+      "start": "00:03:46",
+      "end": "00:03:54.50",
+      "video": true,
+      "audio": true
+    },
+    {
+      "filename": "haunting_vocal_tutorial",
+      "name": "Haunting Vocal",
+      "start": "00:03:54.50",
+      "end": "00:04:56.50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "demon_time_preview",
+      "name": "Demon Time",
+      "start": "00:04:56.50",
+      "end": "00:05:05",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "demon_time_tutorial",
+      "name": "Demon Time",
+      "start": "00:05:05",
+      "end": "00:06:06.50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "reverse_reverb_preview",
+      "name": "Reverse Reverb",
+      "start": "00:06:06.50",
+      "end": "00:06:11",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "reverse_reverb_tutorial",
+      "name": "Reverse Reverb",
+      "start": "00:06:11",
+      "end": "00:07:08.50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "reverse_reverb_plus_preview",
+      "name": "Reverse Reverb +",
+      "start": "00:07:08.50",
+      "end": "00:07:12.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "reverse_reverb_plus_tutorial",
+      "name": "Reverse Reverb +",
+      "start": "00:07:12.50",
+      "end": "00:08:34",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "delay_transition_preview",
+      "name": "Delay Transition",
+      "start": "00:08:34",
+      "end": "00:08:43.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "delay_transition_tutorial",
+      "name": "Delay Transition",
+      "start": "00:08:43.50",
+      "end": "00:10:27.50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "vocal_synth_preview",
+      "name": "Vocal Synth",
+      "start": "00:10:27.50",
+      "end": "00:10:35",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "vocal_synth_tutorial",
+      "name": "Vocal Synth",
+      "start": "00:10:35",
+      "end": "00:11:26",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "vocal_rapture_preview",
+      "name": "Vocal Rapture",
+      "start": "00:11:26",
+      "end": "00:11:31",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "vocal_rapture_tutorial",
+      "name": "Vocal Rapture",
+      "start": "00:11:31",
+      "end": "00:12:28.50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "impactful_vocals_preview",
+      "name": "Impactful Vocals",
+      "start": "00:12:28.50",
+      "end": "00:12:37.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "impactful_vocals_tutorial",
+      "name": "Impactful Vocals",
+      "start": "00:12:37.50",
+      "end": "00:14:05",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "gap_filler_preview",
+      "name": "Gap Filler",
+      "start": "00:14:05",
+      "end": "00:14:15.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "gap_filler_tutorial",
+      "name": "Gap Filler",
+      "start": "00:14:15.50",
+      "end": "00:16:09",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "pretty_vocals_preview",
+      "name": "Pretty Vocals",
+      "start": "00:16:09",
+      "end": "00:16:18.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "pretty_vocals_tutorial",
+      "name": "Pretty Vocals",
+      "start": "00:16:18.50",
+      "end": "00:17:39.50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "pretty_slap_preview",
+      "name": "Pretty Slap",
+      "start": "00:17:39.50",
+      "end": "00:17:46",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "pretty_slap_tutorial",
+      "name": "Pretty Slap",
+      "start": "00:17:46",
+      "end": "00:18:32",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "stretch_and_stutter_preview",
+      "name": "Stretch & Stutter",
+      "start": "00:18:32",
+      "end": "00:18:39",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "stretch_and_stutter_tutorial",
+      "name": "Stretch & Stutter",
+      "start": "00:18:39",
+      "end": "00:19:50.50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "gated_fun_preview",
+      "name": "Gated Fun",
+      "start": "00:19:50.50",
+      "end": "00:20:01",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "gated_fun_tutorial",
+      "name": "Gated Fun",
+      "start": "00:20:01",
+      "end": "00:20:47",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "ambient_pad_preview",
+      "name": "Ambient Pad",
+      "start": "00:20:47",
+      "end": "00:20:56",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "ambient_pad_tutorial",
+      "name": "Ambient Pad",
+      "start": "00:20:56",
+      "end": "00:22:10",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "distant_voicemail_preview",
+      "name": "Distant Voicemail",
+      "start": "00:22:10",
+      "end": "00:22:15",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "distant_voicemail_tutorial",
+      "name": "Distant Voicemail",
+      "start": "00:22:15",
+      "end": "00:23:02",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "trippy_delays_preview",
+      "name": "Trippy Delays",
+      "start": "00:23:02",
+      "end": "00:23:11.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "trippy_delays_tutorial",
+      "name": "Trippy Delays",
+      "start": "00:23:11.50",
+      "end": "00:24:26",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "movements_preview",
+      "name": "Movements",
+      "start": "00:24:26",
+      "end": "00:24:41",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "movements_tutorial",
+      "name": "Movements",
+      "start": "00:24:41",
+      "end": "00:25:42.50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "buggin_out_preview",
+      "name": "Buggin’ Out",
+      "start": "00:25:42.50",
+      "end": "00:25:46",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "buggin_out_tutorial",
+      "name": "Buggin’ Out",
+      "start": "00:25:46",
+      "end": "00:26:39",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "transition_riser_preview",
+      "name": "Transition Riser",
+      "start": "00:26:39",
+      "end": "00:26:43.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "transition_riser_tutorial",
+      "name": "Transition Riser",
+      "start": "00:26:43.50",
+      "end": "00:28:08",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "melody_tails_preview",
+      "name": "Melody Tails",
+      "start": "00:28:08",
+      "end": "00:28:18.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "melody_tails_tutorial",
+      "name": "Melody Tails",
+      "start": "00:28:18.50",
+      "end": "00:29:22",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "gated_effects_preview",
+      "name": "Gated Effects",
+      "start": "00:29:22",
+      "end": "00:29:32",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "gated_effects_tutorial",
+      "name": "Gated Effects",
+      "start": "00:29:32",
+      "end": "00:30:43",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "shifted_slap_preview",
+      "name": "Shifted Slap",
+      "start": "00:30:43",
+      "end": "00:30:46.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "shifted_slap_tutorial",
+      "name": "Shifted Slap",
+      "start": "00:30:46.50",
+      "end": "00:31:39",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "distorted_adlibs_preview",
+      "name": "Distorted Adlibs",
+      "start": "00:31:39",
+      "end": "00:31:45",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "distorted_adlibs_tutorial",
+      "name": "Distorted Adlibs",
+      "start": "00:31:45",
+      "end": "00:32:51",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "dark_reverb_preview",
+      "name": "Dark Reverb",
+      "start": "00:32:51",
+      "end": "00:33:02",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "dark_reverb_tutorial",
+      "name": "Dark Reverb",
+      "start": "00:33:02",
+      "end": "00:33:50.50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "dark_ambience_preview",
+      "name": "Dark Ambience",
+      "start": "00:33:50.50",
+      "end": "00:33:58",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "dark_ambience_tutorial",
+      "name": "Dark Ambience",
+      "start": "00:33:58",
+      "end": "00:34:51",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "flanger_delays_preview",
+      "name": "Flanger Delays",
+      "start": "00:34:51",
+      "end": "00:35:02.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "flanger_delays_tutorial",
+      "name": "Flanger Delays",
+      "start": "00:35:02.50",
+      "end": "00:35:46.50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "megaphone_preview",
+      "name": "Megaphone",
+      "start": "00:35:46.50",
+      "end": "00:35:57",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "megaphone_tutorial",
+      "name": "Megaphone",
+      "start": "00:35:57",
+      "end": "00:36:36",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "build_up_preview",
+      "name": "Build Up",
+      "start": "00:36:36",
+      "end": "00:36:40.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "build_up_tutorial",
+      "name": "Build Up",
+      "start": "00:36:40.50",
+      "end": "00:38:09.50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "throw_preview",
+      "name": "Throw",
+      "start": "00:38:09.50",
+      "end": "00:38:15.50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "throw_tutorial",
+      "name": "Throw",
+      "start": "00:38:15.50",
+      "end": "00:39:18.50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "vocal_samples_preview",
+      "name": "Vocal Samples",
+      "start": "00:39:19",
+      "end": "00:39:26",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "vocal_samples_tutorial",
+      "name": "Vocal Samples",
+      "start": "00:39:26",
+      "end": "00:41:03",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "distorted_room_preview",
+      "name": "Distorted Room",
+      "start": "00:41:03",
+      "end": "00:41:13",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "distorted_room_tutorial",
+      "name": "Distorted Room",
+      "start": "00:41:13",
+      "end": "00:42:03",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "sidechain_stutter_preview",
+      "name": "Sidechain Stutter",
+      "start": "00:42:02.50",
+      "end": "00:42:10",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "sidechain_stutter_tutorial",
+      "name": "Sidechain Stutter",
+      "start": "00:42:10",
+      "end": "00:42:59.81",
+      "video": true,
+      "audio": false
+    }
+  ]
+}
