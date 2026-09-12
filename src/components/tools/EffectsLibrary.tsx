@@ -68,16 +68,18 @@ export function EffectsLibrary() {
             </Link>
           </div>
 
-          <div className="grid min-h-0 flex-1 grid-cols-5 grid-rows-7 overflow-hidden lg:grid-cols-7 lg:grid-rows-5">
-            {effects.map((effect) => (
-              <EffectTile
-                key={effect.slug}
-                effect={effect}
-                playing={playingId === effect.slug}
-                onPreview={() => toggle(effect.slug, effect.previewSrc)}
-                onTutorial={() => openTutorial(effect)}
-              />
-            ))}
+          <div className="flex min-h-0 flex-1 items-center justify-center overflow-visible">
+            <div className="grid w-[min(100vw,calc((100dvh-2.5rem)*5/7))] grid-cols-5 grid-rows-7 lg:w-[min(100vw,calc((100dvh-2.5rem)*7/5))] lg:grid-cols-7 lg:grid-rows-5">
+              {effects.map((effect) => (
+                <EffectTile
+                  key={effect.slug}
+                  effect={effect}
+                  playing={playingId === effect.slug}
+                  onPreview={() => toggle(effect.slug, effect.previewSrc)}
+                  onTutorial={() => openTutorial(effect)}
+                />
+              ))}
+            </div>
           </div>
         </>
       ) : (

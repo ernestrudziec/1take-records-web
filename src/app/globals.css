@@ -13,6 +13,53 @@
   --color-muted: var(--muted);
   --color-border: var(--border);
   --font-sans: var(--font-montserrat);
+  --animate-preview-glow: preview-glow-flicker 1.7s ease-in-out infinite;
+  --animate-preview-scale: preview-scale 2.35s ease-in-out infinite;
+}
+
+@keyframes preview-glow-flicker {
+  0%,
+  100% {
+    opacity: 0.32;
+  }
+  16% {
+    opacity: 0.72;
+  }
+  28% {
+    opacity: 0.4;
+  }
+  47% {
+    opacity: 0.86;
+  }
+  63% {
+    opacity: 0.46;
+  }
+  81% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes preview-scale {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  22% {
+    transform: scale(1.028);
+  }
+  48% {
+    transform: scale(1.006);
+  }
+  73% {
+    transform: scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-preview-glow,
+  .animate-preview-scale {
+    animation: none;
+  }
 }
 
 html {

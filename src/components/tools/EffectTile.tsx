@@ -132,7 +132,7 @@ export function EffectTile({
 
   return (
     <div
-      className="relative h-full min-h-0 perspective-[900px]"
+      className="relative aspect-square h-full w-full perspective-[900px]"
       style={{ zIndex: hovering || playing ? 20 : 1 }}
     >
       <article
@@ -140,7 +140,7 @@ export function EffectTile({
         onPointerEnter={() => setHovering(true)}
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
-        className="group relative flex h-full min-h-0 flex-col bg-zinc-950 will-change-transform"
+        className="group relative flex h-full w-full flex-col bg-zinc-950 will-change-transform"
         style={{
           boxShadow: hovering ? hoverGlow : playing ? playGlow : restGlow,
           transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(${hovering ? 12 : 0}px)`,
@@ -151,70 +151,83 @@ export function EffectTile({
         }}
       >
         <div
-          className="pointer-events-none absolute inset-0"
+          className={`pointer-events-none absolute inset-0 ${playing ? "animate-preview-glow" : ""}`}
           style={{
-            background: hovering
-              ? `radial-gradient(320px circle at ${tilt.px}% ${tilt.py}%, ${glow}18, transparent 48%)`
+            background: playing
+              ? `radial-gradient(circle at 50% 38%, ${glow}26, transparent 62%)`
+              : hovering
+                ? `radial-gradient(320px circle at ${tilt.px}% ${tilt.py}%, ${glow}18, transparent 48%)`
+                : undefined,
+            boxShadow: playing
+              ? `inset 0 0 0 1px ${glow}aa, inset 0 0 28px ${glow}30, 0 0 20px ${glow}40`
               : undefined,
           }}
           aria-hidden
         />
 
         <div
-          className="relative flex min-h-0 flex-1 flex-col items-center justify-center px-2 text-center"
-          style={{ transform: "translateZ(20px)" }}
+          className={`relative flex h-full min-h-0 flex-1 flex-col ${playing ? "animate-preview-scale" : ""}`}
         >
           <div
-            className={`flex h-8 w-8 items-center justify-center bg-linear-to-br ${effect.gradient} sm:h-10 sm:w-10`}
-            style={{
-              boxShadow: hovering
-                ? `0 0 12px ${glow}66`
-                : `0 0 7px ${glow}40`,
-            }}
+            className="relative flex min-h-0 flex-1 flex-col items-center justify-center px-2 text-center"
+            style={{ transform: "translateZ(20px)" }}
           >
-            <Icon className="h-4 w-4 text-white sm:h-5 sm:w-5" strokeWidth={1.75} />
+            <div
+              className={`flex h-8 w-8 items-center justify-center bg-linear-to-br ${effect.gradient} sm:h-10 sm:w-10`}
+              style={{
+                boxShadow: playing
+                  ? `0 0 14px ${glow}88`
+                  : hovering
+                    ? `0 0 12px ${glow}66`
+                    : `0 0 7px ${glow}40`,
+              }}
+            >
+              <Icon className="h-4 w-4 text-white sm:h-5 sm:w-5" strokeWidth={1.75} />
+            </div>
+            <h3
+              className={`mt-1.5 bg-linear-to-br ${effect.gradient} bg-clip-text text-[11px] font-semibold leading-tight text-transparent sm:mt-2 sm:text-sm`}
+              style={{
+                filter: playing
+                  ? `drop-shadow(0 0 7px ${glow}99)`
+                  : hovering
+                    ? `drop-shadow(0 0 6px ${glow}88)`
+                    : `drop-shadow(0 0 3px ${glow}55)`,
+              }}
+            >
+              {effect.name}
+            </h3>
           </div>
-          <h3
-            className={`mt-1.5 bg-linear-to-br ${effect.gradient} bg-clip-text text-[11px] font-semibold leading-tight text-transparent sm:mt-2 sm:text-sm`}
-            style={{
-              filter: hovering
-                ? `drop-shadow(0 0 6px ${glow}88)`
-                : `drop-shadow(0 0 3px ${glow}55)`,
-            }}
-          >
-            {effect.name}
-          </h3>
-        </div>
 
-        <div
-          className="relative grid grid-cols-2 border-t border-white/10"
-          style={{ transform: "translateZ(16px)" }}
-        >
-          <button
-            type="button"
-            onClick={onPreview}
-            aria-pressed={playing}
-            className={`inline-flex items-center justify-center gap-1 border-r border-white/10 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] transition-colors sm:py-2 sm:text-[11px] ${
-              playing
-                ? "bg-white text-black"
-                : "text-zinc-300 hover:bg-white hover:text-black"
-            }`}
+          <div
+            className="relative grid grid-cols-2 border-t border-white/10"
+            style={{ transform: "translateZ(16px)" }}
           >
-            {playing ? (
-              <Pause className="h-3 w-3" strokeWidth={2} />
-            ) : (
-              <Play className="h-3 w-3" strokeWidth={2} />
-            )}
-            {playing ? "Stop" : "Preview"}
-          </button>
-          <button
-            type="button"
-            onClick={onTutorial}
-            className="inline-flex items-center justify-center gap-1 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-300 transition-colors hover:bg-white hover:text-black sm:py-2 sm:text-[11px]"
-          >
-            <Video className="h-3 w-3" strokeWidth={2} />
-            Tutorial
-          </button>
+            <button
+              type="button"
+              onClick={onPreview}
+              aria-pressed={playing}
+              className={`inline-flex items-center justify-center gap-1 border-r border-white/10 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] transition-colors sm:py-2 sm:text-[11px] ${
+                playing
+                  ? "bg-white text-black"
+                  : "text-zinc-300 hover:bg-white hover:text-black"
+              }`}
+            >
+              {playing ? (
+                <Pause className="h-3 w-3" strokeWidth={2} />
+              ) : (
+                <Play className="h-3 w-3" strokeWidth={2} />
+              )}
+              {playing ? "Stop" : "Preview"}
+            </button>
+            <button
+              type="button"
+              onClick={onTutorial}
+              className="inline-flex items-center justify-center gap-1 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-300 transition-colors hover:bg-white hover:text-black sm:py-2 sm:text-[11px]"
+            >
+              <Video className="h-3 w-3" strokeWidth={2} />
+              Tutorial
+            </button>
+          </div>
         </div>
       </article>
     </div>
