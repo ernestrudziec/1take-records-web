@@ -122,13 +122,16 @@ export function EffectTile({
   }, []);
 
   const glow = effect.glow;
-  const restGlow = `inset 0 0 0 1px ${glow}28`;
-  const hoverGlow = [
-    `inset 0 0 0 1px ${glow}77`,
-    `${-tilt.ry}px ${tilt.rx + 10}px 22px rgba(0,0,0,0.45)`,
-    `0 0 16px ${glow}26`,
+  const restGlow = [
+    `inset 0 0 0 1px ${glow}88`,
+    `0 0 18px ${glow}2c`,
   ].join(", ");
-  const playGlow = `inset 0 0 0 1px ${glow}99, 0 0 14px ${glow}33`;
+  const hoverGlow = [
+    `inset 0 0 0 1px ${glow}a3`,
+    `${-tilt.ry}px ${tilt.rx + 10}px 22px rgba(0,0,0,0.45)`,
+    `0 0 22px ${glow}35`,
+  ].join(", ");
+  const playGlow = `inset 0 0 0 1px ${glow}99, 0 0 18px ${glow}3d`;
 
   return (
     <div
@@ -156,8 +159,8 @@ export function EffectTile({
             background: playing
               ? `radial-gradient(circle at 50% 38%, ${glow}26, transparent 62%)`
               : hovering
-                ? `radial-gradient(320px circle at ${tilt.px}% ${tilt.py}%, ${glow}18, transparent 48%)`
-                : undefined,
+                ? `radial-gradient(320px circle at ${tilt.px}% ${tilt.py}%, ${glow}21, transparent 48%)`
+                : `radial-gradient(280px circle at 50% 38%, ${glow}1c, transparent 52%)`,
             boxShadow: playing
               ? `inset 0 0 0 1px ${glow}aa, inset 0 0 28px ${glow}30, 0 0 20px ${glow}40`
               : undefined,
@@ -173,25 +176,32 @@ export function EffectTile({
             style={{ transform: "translateZ(20px)" }}
           >
             <div
-              className={`flex h-8 w-8 items-center justify-center bg-linear-to-br ${effect.gradient} sm:h-10 sm:w-10`}
+              className="relative isolate h-9 w-9 sm:h-12 sm:w-12"
               style={{
-                boxShadow: playing
-                  ? `0 0 14px ${glow}88`
+                filter: playing
+                  ? `drop-shadow(0 0 16px ${glow}99)`
                   : hovering
-                    ? `0 0 12px ${glow}66`
-                    : `0 0 7px ${glow}40`,
+                    ? `drop-shadow(0 0 17px ${glow}8c)`
+                    : `drop-shadow(0 0 14px ${glow}75)`,
               }}
             >
-              <Icon className="h-4 w-4 text-white sm:h-5 sm:w-5" strokeWidth={1.75} />
+              <div
+                className={`absolute inset-0 bg-linear-to-br ${effect.gradient}`}
+                aria-hidden
+              />
+              <Icon
+                className="relative h-full w-full text-black mix-blend-destination-in"
+                strokeWidth={1.75}
+              />
             </div>
             <h3
               className={`mt-1.5 bg-linear-to-br ${effect.gradient} bg-clip-text text-[11px] font-semibold leading-tight text-transparent sm:mt-2 sm:text-sm`}
               style={{
                 filter: playing
-                  ? `drop-shadow(0 0 7px ${glow}99)`
+                  ? `drop-shadow(0 0 8px ${glow}bb)`
                   : hovering
-                    ? `drop-shadow(0 0 6px ${glow}88)`
-                    : `drop-shadow(0 0 3px ${glow}55)`,
+                    ? `drop-shadow(0 0 8px ${glow}bb)`
+                    : `drop-shadow(0 0 7px ${glow}9c)`,
               }}
             >
               {effect.name}
