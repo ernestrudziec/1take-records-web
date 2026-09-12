@@ -37,7 +37,7 @@ export function CueSheet({
   onPlayRange,
   onOutputs,
 }: CueSheetProps) {
-  const rowRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const rowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
   const selected = cues[selectedIndex];
   const selectedMarks = selected ? marks[selected.id] : undefined;
 
@@ -131,36 +131,26 @@ export function CueSheet({
               return (
                 <tr
                   key={cue.id}
-                  className={`border-t border-white/5 ${
-                    active ? "bg-white/10" : "hover:bg-white/5"
+                  ref={(node) => {
+                    rowRefs.current[cue.id] = node;
+                  }}
+                  onClick={() => onSelect(index, true)}
+                  className={`cursor-pointer border-t border-white/5 transition-colors ${
+                    active
+                      ? "bg-white/15"
+                      : "hover:bg-white/10"
                   }`}
                 >
                   <td className="px-2 py-1.5 font-mono text-zinc-500">
                     {String(index + 1).padStart(2, "0")}
                   </td>
-                  <td className="px-2 py-1.5">
-                    <button
-                      ref={(node) => {
-                        rowRefs.current[cue.id] = node;
-                      }}
-                      type="button"
-                      onClick={() => onSelect(index, true)}
-                      className={`text-left ${active ? "text-white" : "text-zinc-300"}`}
-                    >
-                      {cue.name}
-                    </button>
+                  <td
+                    className={`px-2 py-1.5 ${active ? "text-white" : "text-zinc-300"}`}
+                  >
+                    {cue.name}
                   </td>
-                  <td className="px-2 py-1.5">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        onSelect(index, false);
-                        onSeekMark(cue.chapter);
-                      }}
-                      className="font-mono text-zinc-400 underline-offset-2 hover:text-white hover:underline"
-                    >
-                      {cue.chapterLabel}
-                    </button>
+                  <td className="px-2 py-1.5 font-mono text-zinc-400">
+                    {cue.chapterLabel}
                   </td>
                   <StampCell
                     value={mark.preview.start}
@@ -358,6 +348,7 @@ function StampCell({
       <button
         type="button"
         onClick={(event) => {
+          event.stopPropagation();
           if (event.shiftKey) {
             onStamp();
             return;
@@ -365,7 +356,7 @@ function StampCell({
           if (value !== null) onSeek(value);
           else onStamp();
         }}
-        className={`w-full px-1 py-1 text-left font-mono underline-offset-2 hover:underline ${
+        className={`w-full cursor-pointer px-1 py-1 text-left font-mono underline-offset-2 hover:underline ${
           value === null
             ? "text-zinc-600"
             : complete
