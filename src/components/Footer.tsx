@@ -11,7 +11,11 @@ const socialLinks = [
 
 export function Footer() {
   const pathname = usePathname();
-  if (pathname.startsWith("/booking") || pathname.startsWith("/editors")) {
+  if (
+    pathname.startsWith("/booking") ||
+    pathname.startsWith("/editors") ||
+    pathname.startsWith("/narzedzia/efekty")
+  ) {
     return null;
   }
 

@@ -122,27 +122,17 @@ export function EffectTile({
   }, []);
 
   const glow = effect.glow;
-  const restGlow = [
-    `inset 0 0 0 1px ${glow}77`,
-    `inset 0 0 42px ${glow}2e`,
-    `0 0 18px ${glow}44`,
-  ].join(", ");
+  const restGlow = `inset 0 0 0 1px ${glow}28`;
   const hoverGlow = [
-    `inset 0 0 0 1px ${glow}ee`,
-    `inset 0 0 56px ${glow}40`,
-    `${-tilt.ry * 1.4}px ${tilt.rx * 1.6 + 16}px 36px rgba(0,0,0,0.6)`,
-    `0 0 28px ${glow}88`,
-    `0 18px 48px ${glow}55`,
+    `inset 0 0 0 1px ${glow}77`,
+    `${-tilt.ry}px ${tilt.rx + 10}px 22px rgba(0,0,0,0.45)`,
+    `0 0 16px ${glow}26`,
   ].join(", ");
-  const playGlow = [
-    `inset 0 0 0 1px ${glow}`,
-    `inset 0 0 50px ${glow}38`,
-    `0 0 26px ${glow}70`,
-  ].join(", ");
+  const playGlow = `inset 0 0 0 1px ${glow}99, 0 0 14px ${glow}33`;
 
   return (
     <div
-      className="relative h-full perspective-[900px]"
+      className="relative h-full min-h-0 perspective-[900px]"
       style={{ zIndex: hovering || playing ? 20 : 1 }}
     >
       <article
@@ -150,10 +140,10 @@ export function EffectTile({
         onPointerEnter={() => setHovering(true)}
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
-        className="group relative flex aspect-square flex-col bg-zinc-950 will-change-transform"
+        className="group relative flex h-full min-h-0 flex-col bg-zinc-950 will-change-transform"
         style={{
           boxShadow: hovering ? hoverGlow : playing ? playGlow : restGlow,
-          transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(${hovering ? 18 : 0}px)`,
+          transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(${hovering ? 12 : 0}px)`,
           transformStyle: "preserve-3d",
           transition: hovering
             ? "transform 80ms linear, box-shadow 160ms ease"
@@ -164,32 +154,32 @@ export function EffectTile({
           className="pointer-events-none absolute inset-0"
           style={{
             background: hovering
-              ? `radial-gradient(420px circle at ${tilt.px}% ${tilt.py}%, ${glow}40, transparent 46%)`
-              : `radial-gradient(280px circle at 50% 38%, ${glow}22, transparent 58%)`,
+              ? `radial-gradient(320px circle at ${tilt.px}% ${tilt.py}%, ${glow}18, transparent 48%)`
+              : undefined,
           }}
           aria-hidden
         />
 
         <div
-          className="relative flex min-h-0 flex-1 flex-col items-center justify-center px-2.5 text-center"
-          style={{ transform: "translateZ(28px)" }}
+          className="relative flex min-h-0 flex-1 flex-col items-center justify-center px-2 text-center"
+          style={{ transform: "translateZ(20px)" }}
         >
           <div
-            className={`flex h-11 w-11 items-center justify-center bg-linear-to-br ${effect.gradient} sm:h-12 sm:w-12`}
+            className={`flex h-8 w-8 items-center justify-center bg-linear-to-br ${effect.gradient} sm:h-10 sm:w-10`}
             style={{
               boxShadow: hovering
-                ? `0 0 22px ${glow}, 0 0 48px ${glow}cc, 0 10px 28px ${glow}88`
-                : `0 0 14px ${glow}dd, 0 0 28px ${glow}88, 0 6px 16px ${glow}55`,
+                ? `0 0 12px ${glow}66`
+                : `0 0 7px ${glow}40`,
             }}
           >
-            <Icon className="h-5 w-5 text-white" strokeWidth={1.75} />
+            <Icon className="h-4 w-4 text-white sm:h-5 sm:w-5" strokeWidth={1.75} />
           </div>
           <h3
-            className={`mt-2.5 bg-linear-to-br ${effect.gradient} bg-clip-text text-[13px] font-semibold leading-tight text-transparent sm:text-sm`}
+            className={`mt-1.5 bg-linear-to-br ${effect.gradient} bg-clip-text text-[11px] font-semibold leading-tight text-transparent sm:mt-2 sm:text-sm`}
             style={{
               filter: hovering
-                ? `drop-shadow(0 0 10px ${glow}) drop-shadow(0 0 22px ${glow}bb)`
-                : `drop-shadow(0 0 6px ${glow}cc) drop-shadow(0 0 14px ${glow}77)`,
+                ? `drop-shadow(0 0 6px ${glow}88)`
+                : `drop-shadow(0 0 3px ${glow}55)`,
             }}
           >
             {effect.name}
@@ -204,7 +194,7 @@ export function EffectTile({
             type="button"
             onClick={onPreview}
             aria-pressed={playing}
-            className={`inline-flex items-center justify-center gap-1 border-r border-white/10 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] transition-colors sm:text-[11px] ${
+            className={`inline-flex items-center justify-center gap-1 border-r border-white/10 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] transition-colors sm:py-2 sm:text-[11px] ${
               playing
                 ? "bg-white text-black"
                 : "text-zinc-300 hover:bg-white hover:text-black"
@@ -220,7 +210,7 @@ export function EffectTile({
           <button
             type="button"
             onClick={onTutorial}
-            className="inline-flex items-center justify-center gap-1 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-300 transition-colors hover:bg-white hover:text-black sm:text-[11px]"
+            className="inline-flex items-center justify-center gap-1 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-300 transition-colors hover:bg-white hover:text-black sm:py-2 sm:text-[11px]"
           >
             <Video className="h-3 w-3" strokeWidth={2} />
             Tutorial
