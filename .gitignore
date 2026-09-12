@@ -47,5 +47,7 @@ next-env.d.ts
 
 # cut script working files (source + raw output)
 /scripts/output/
+/scripts/output_prod/
 /scripts/vocal_effects.mp4
+/scripts/prod_effects.mp4
 /scripts/__pycache__/

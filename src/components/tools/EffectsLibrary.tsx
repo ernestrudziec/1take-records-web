@@ -20,7 +20,7 @@ const categoryIcons = {
 
 export function EffectsLibrary() {
   const [activeCategory, setActiveCategory] = useState<EffectCategory | null>(
-    "vocals",
+    null,
   );
   const [tutorial, setTutorial] = useState<ProductionEffect | null>(null);
   const { playingId, toggle, stop } = usePreviewPlayer();
@@ -69,16 +69,25 @@ export function EffectsLibrary() {
           </div>
 
           <div className="flex min-h-0 flex-1 items-center justify-center overflow-visible">
-            <div className="grid w-[min(100vw,calc((100dvh-2.5rem-30px)*5/7+20px))] grid-cols-5 grid-rows-7 gap-[5px] lg:w-[min(100vw,calc((100dvh-2.5rem-20px)*7/5+30px))] lg:grid-cols-7 lg:grid-rows-5">
-              {effects.map((effect) => (
-                <EffectTile
-                  key={effect.slug}
-                  effect={effect}
-                  playing={playingId === effect.slug}
-                  onPreview={() => toggle(effect.slug, effect.previewSrc)}
-                  onTutorial={() => openTutorial(effect)}
-                />
-              ))}
+            <div
+              className={
+                activeCategory === "general"
+                  ? "grid w-[min(100vw,calc((100dvh-2.5rem-95px)*5/20+20px))] grid-cols-5 grid-rows-20 gap-[5px] lg:w-[min(100vw,calc(100dvh-2.5rem))] lg:grid-cols-10 lg:grid-rows-10"
+                  : "grid w-[min(100vw,calc((100dvh-2.5rem-30px)*5/7+20px))] grid-cols-5 grid-rows-7 gap-[5px] lg:w-[min(100vw,calc((100dvh-2.5rem-20px)*7/5+30px))] lg:grid-cols-7 lg:grid-rows-5"
+              }
+            >
+              {effects.map((effect) => {
+                const playId = `${effect.category}:${effect.slug}`;
+                return (
+                  <EffectTile
+                    key={playId}
+                    effect={effect}
+                    playing={playingId === playId}
+                    onPreview={() => toggle(playId, effect.previewSrc)}
+                    onTutorial={() => openTutorial(effect)}
+                  />
+                );
+              })}
             </div>
           </div>
         </>

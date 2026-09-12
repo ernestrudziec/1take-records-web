@@ -1,3 +1,5 @@
+import { generalEffects } from "@/lib/general-effects";
+
 export type EffectCategory = "vocals" | "general";
 
 export type EffectIcon =
@@ -35,7 +37,32 @@ export type EffectIcon =
   | "send"
   | "library"
   | "door"
-  | "stutter";
+  | "stutter"
+  | "timer"
+  | "layers"
+  | "volume"
+  | "circle-dot"
+  | "speaker"
+  | "scissors"
+  | "hash"
+  | "rocket"
+  | "repeat"
+  | "wind"
+  | "undo"
+  | "drum"
+  | "hourglass"
+  | "aperture"
+  | "split"
+  | "gamepad"
+  | "radio"
+  | "eye"
+  | "bot"
+  | "refresh"
+  | "mic"
+  | "grid"
+  | "keyboard"
+  | "target"
+  | "crown";
 
 export type ProductionEffect = {
   slug: string;
@@ -64,8 +91,8 @@ export const effectCategories: {
   {
     id: "general",
     title: "General",
-    description: "Efekty na bity, instrumenty i pełny mix. Wkrótce.",
-    available: false,
+    description: "100 efektów i pomysłów na produkcję — preview i tutorial przy każdym kafelku.",
+    available: true,
   },
 ];
 
@@ -129,6 +156,11 @@ export const productionEffects: ProductionEffect[] = [
   vocalEffect("sidechain-stutter", "Sidechain Stutter", "Pump i cięty stutter", "stutter", ["#f0abfc", "#db2777", "#a21caf"], "#e879f9"),
 ];
 
+export const allEffects: ProductionEffect[] = [
+  ...productionEffects,
+  ...generalEffects,
+];
+
 export function effectsByCategory(category: EffectCategory) {
-  return productionEffects.filter((effect) => effect.category === category);
+  return allEffects.filter((effect) => effect.category === category);
 }

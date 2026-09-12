@@ -1,0 +1,1604 @@
+{
+  "cut": [
+    {
+      "filename": "halftime_preview",
+      "name": "Halftime",
+      "start": "00:00:03",
+      "end": "00:00:08",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "halftime_tutorial",
+      "name": "Halftime",
+      "start": "00:00:08",
+      "end": "00:00:59",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "haunting_melodies_preview",
+      "name": "Haunting Melodies",
+      "start": "00:01:02",
+      "end": "00:01:07",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "haunting_melodies_tutorial",
+      "name": "Haunting Melodies",
+      "start": "00:01:07",
+      "end": "00:02:12",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "ambitextures_preview",
+      "name": "Ambitextures",
+      "start": "00:02:15",
+      "end": "00:02:20",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "ambitextures_tutorial",
+      "name": "Ambitextures",
+      "start": "00:02:20",
+      "end": "00:03:19",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "bass_booster_preview",
+      "name": "Bass Booster",
+      "start": "00:03:22",
+      "end": "00:03:27",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "bass_booster_tutorial",
+      "name": "Bass Booster",
+      "start": "00:03:27",
+      "end": "00:04:30",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "layers_preview",
+      "name": "Layers",
+      "start": "00:04:33",
+      "end": "00:04:38",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "layers_tutorial",
+      "name": "Layers",
+      "start": "00:04:38",
+      "end": "00:05:56",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "revcrush_preview",
+      "name": "RevCrush",
+      "start": "00:05:59",
+      "end": "00:06:04",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "revcrush_tutorial",
+      "name": "RevCrush",
+      "start": "00:06:04",
+      "end": "00:07:19",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "simples_preview",
+      "name": "Simples",
+      "start": "00:07:22",
+      "end": "00:07:27",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "simples_tutorial",
+      "name": "Simples",
+      "start": "00:07:27",
+      "end": "00:08:16",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "talking_synth_preview",
+      "name": "Talking Synth",
+      "start": "00:08:19",
+      "end": "00:08:24",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "talking_synth_tutorial",
+      "name": "Talking Synth",
+      "start": "00:08:24",
+      "end": "00:09:11",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "big_bass_preview",
+      "name": "Big Bass",
+      "start": "00:09:14",
+      "end": "00:09:19",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "big_bass_tutorial",
+      "name": "Big Bass",
+      "start": "00:09:19",
+      "end": "00:10:11",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "distortion_fun_preview",
+      "name": "Distortion Fun",
+      "start": "00:10:14",
+      "end": "00:10:19",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "distortion_fun_tutorial",
+      "name": "Distortion Fun",
+      "start": "00:10:19",
+      "end": "00:11:30",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "chops_preview",
+      "name": "Chops",
+      "start": "00:11:33",
+      "end": "00:11:38",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "chops_tutorial",
+      "name": "Chops",
+      "start": "00:11:38",
+      "end": "00:12:52",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "lfo_synth_preview",
+      "name": "LFO Synth",
+      "start": "00:12:55",
+      "end": "00:13:00",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "lfo_synth_tutorial",
+      "name": "LFO Synth",
+      "start": "00:13:00",
+      "end": "00:14:36",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "1234_preview",
+      "name": "1234",
+      "start": "00:14:39",
+      "end": "00:14:44",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "1234_tutorial",
+      "name": "1234",
+      "start": "00:14:44",
+      "end": "00:16:30",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "vibe_preview",
+      "name": "Vibe",
+      "start": "00:16:33",
+      "end": "00:16:38",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "vibe_tutorial",
+      "name": "Vibe",
+      "start": "00:16:38",
+      "end": "00:17:53",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "melody_trip_preview",
+      "name": "Melody Trip",
+      "start": "00:17:56",
+      "end": "00:18:01",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "melody_trip_tutorial",
+      "name": "Melody Trip",
+      "start": "00:18:01",
+      "end": "00:19:11",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "ez_songstarter_preview",
+      "name": "EZ Songstarter",
+      "start": "00:19:14",
+      "end": "00:19:19",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "ez_songstarter_tutorial",
+      "name": "EZ Songstarter",
+      "start": "00:19:19",
+      "end": "00:20:47",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "bass_drop_preview",
+      "name": "Bass Drop",
+      "start": "00:20:50",
+      "end": "00:20:55",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "bass_drop_tutorial",
+      "name": "Bass Drop",
+      "start": "00:20:55",
+      "end": "00:21:45",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "reverse_stutters_preview",
+      "name": "Reverse Stutters",
+      "start": "00:21:48",
+      "end": "00:21:53",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "reverse_stutters_tutorial",
+      "name": "Reverse Stutters",
+      "start": "00:21:53",
+      "end": "00:23:27",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "glitched_vocals_preview",
+      "name": "Glitched Vocals",
+      "start": "00:23:30",
+      "end": "00:23:35",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "glitched_vocals_tutorial",
+      "name": "Glitched Vocals",
+      "start": "00:23:35",
+      "end": "00:24:12",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "delayed_vox_preview",
+      "name": "Delayed Vox",
+      "start": "00:24:15",
+      "end": "00:24:20",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "delayed_vox_tutorial",
+      "name": "Delayed Vox",
+      "start": "00:24:20",
+      "end": "00:25:45",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "elegant_preview",
+      "name": "Elegant",
+      "start": "00:25:48",
+      "end": "00:25:53",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "elegant_tutorial",
+      "name": "Elegant",
+      "start": "00:25:53",
+      "end": "00:26:55",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "reverse_reverb_preview",
+      "name": "Reverse Reverb",
+      "start": "00:26:58",
+      "end": "00:27:03",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "reverse_reverb_tutorial",
+      "name": "Reverse Reverb",
+      "start": "00:27:03",
+      "end": "00:27:48",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "bouncy_stutters_preview",
+      "name": "Bouncy Stutters",
+      "start": "00:27:51",
+      "end": "00:27:56",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "bouncy_stutters_tutorial",
+      "name": "Bouncy Stutters",
+      "start": "00:27:56",
+      "end": "00:28:58",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "whispers_preview",
+      "name": "Whispers",
+      "start": "00:29:01",
+      "end": "00:29:06",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "whispers_tutorial",
+      "name": "Whispers",
+      "start": "00:29:06",
+      "end": "00:30:25",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "haunting_pad_preview",
+      "name": "Haunting Pad",
+      "start": "00:30:28",
+      "end": "00:30:33",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "haunting_pad_tutorial",
+      "name": "Haunting Pad",
+      "start": "00:30:33",
+      "end": "00:31:30",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "demon_time_preview",
+      "name": "Demon Time",
+      "start": "00:31:33",
+      "end": "00:31:38",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "demon_time_tutorial",
+      "name": "Demon Time",
+      "start": "00:31:38",
+      "end": "00:32:38",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "grainy_vocals_preview",
+      "name": "Grainy Vocals",
+      "start": "00:32:41",
+      "end": "00:32:46",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "grainy_vocals_tutorial",
+      "name": "Grainy Vocals",
+      "start": "00:32:46",
+      "end": "00:34:06",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "pretty_vocal_preview",
+      "name": "Pretty Vocal",
+      "start": "00:34:09",
+      "end": "00:34:14",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "pretty_vocal_tutorial",
+      "name": "Pretty Vocal",
+      "start": "00:34:14",
+      "end": "00:35:32",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "vocal_rewind_preview",
+      "name": "Vocal Rewind",
+      "start": "00:35:35",
+      "end": "00:35:40",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "vocal_rewind_tutorial",
+      "name": "Vocal Rewind",
+      "start": "00:35:40",
+      "end": "00:36:51",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "vocal_pad_preview",
+      "name": "Vocal Pad",
+      "start": "00:36:54",
+      "end": "00:36:59",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "vocal_pad_tutorial",
+      "name": "Vocal Pad",
+      "start": "00:36:59",
+      "end": "00:38:15",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "delay_pitch_preview",
+      "name": "Delay Pitch",
+      "start": "00:38:18",
+      "end": "00:38:23",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "delay_pitch_tutorial",
+      "name": "Delay Pitch",
+      "start": "00:38:23",
+      "end": "00:39:59",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "pad_kick_preview",
+      "name": "Pad Kick",
+      "start": "00:40:02",
+      "end": "00:40:07",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "pad_kick_tutorial",
+      "name": "Pad Kick",
+      "start": "00:40:07",
+      "end": "00:41:11",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "snare_slaps_preview",
+      "name": "Snare Slaps",
+      "start": "00:41:14",
+      "end": "00:41:19",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "snare_slaps_tutorial",
+      "name": "Snare Slaps",
+      "start": "00:41:19",
+      "end": "00:41:48",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "bouncy_vocoder_preview",
+      "name": "Bouncy Vocoder",
+      "start": "00:41:51",
+      "end": "00:41:56",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "bouncy_vocoder_tutorial",
+      "name": "Bouncy Vocoder",
+      "start": "00:41:56",
+      "end": "00:43:25",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "hat_roll_preview",
+      "name": "Hat Roll",
+      "start": "00:43:28",
+      "end": "00:43:33",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "hat_roll_tutorial",
+      "name": "Hat Roll",
+      "start": "00:43:33",
+      "end": "00:44:45",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "kick_2_808_preview",
+      "name": "Kick 2 808",
+      "start": "00:44:48",
+      "end": "00:44:53",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "kick_2_808_tutorial",
+      "name": "Kick 2 808",
+      "start": "00:44:53",
+      "end": "00:45:35",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "alien_drums_preview",
+      "name": "Alien Drums",
+      "start": "00:45:38",
+      "end": "00:45:43",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "alien_drums_tutorial",
+      "name": "Alien Drums",
+      "start": "00:45:43",
+      "end": "00:46:55",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "reverse_delays_preview",
+      "name": "Reverse Delays",
+      "start": "00:46:58",
+      "end": "00:47:03",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "reverse_delays_tutorial",
+      "name": "Reverse Delays",
+      "start": "00:47:03",
+      "end": "00:47:58",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "slappy_chorus_preview",
+      "name": "Slappy Chorus",
+      "start": "00:48:01",
+      "end": "00:48:06",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "slappy_chorus_tutorial",
+      "name": "Slappy Chorus",
+      "start": "00:48:06",
+      "end": "00:49:28",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "grainy_preview",
+      "name": "Grainy",
+      "start": "00:49:31",
+      "end": "00:49:36",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "grainy_tutorial",
+      "name": "Grainy",
+      "start": "00:49:36",
+      "end": "00:50:57",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "aesthetic_slaps_preview",
+      "name": "Aesthetic Slaps",
+      "start": "00:51:00",
+      "end": "00:51:05",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "aesthetic_slaps_tutorial",
+      "name": "Aesthetic Slaps",
+      "start": "00:51:05",
+      "end": "00:53:12",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "reverb_swells_preview",
+      "name": "Reverb Swells",
+      "start": "00:53:15",
+      "end": "00:53:20",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "reverb_swells_tutorial",
+      "name": "Reverb Swells",
+      "start": "00:53:20",
+      "end": "00:54:30",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "slow_stutters_preview",
+      "name": "Slow Stutters",
+      "start": "00:54:33",
+      "end": "00:54:38",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "slow_stutters_tutorial",
+      "name": "Slow Stutters",
+      "start": "00:54:38",
+      "end": "00:55:56",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "double_delays_preview",
+      "name": "Double Delays",
+      "start": "00:55:59",
+      "end": "00:56:04",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "double_delays_tutorial",
+      "name": "Double Delays",
+      "start": "00:56:04",
+      "end": "00:57:01",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "delay_swells_preview",
+      "name": "Delay Swells",
+      "start": "00:57:04",
+      "end": "00:57:09",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "delay_swells_tutorial",
+      "name": "Delay Swells",
+      "start": "00:57:09",
+      "end": "00:57:47",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "ghostly_preview",
+      "name": "Ghostly",
+      "start": "00:57:50",
+      "end": "00:57:55",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "ghostly_tutorial",
+      "name": "Ghostly",
+      "start": "00:57:55",
+      "end": "00:59:03",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "blur_preview",
+      "name": "Blur",
+      "start": "00:59:06",
+      "end": "00:59:11",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "blur_tutorial",
+      "name": "Blur",
+      "start": "00:59:11",
+      "end": "01:00:21",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "split_delays_preview",
+      "name": "Split Delays",
+      "start": "01:00:24",
+      "end": "01:00:29",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "split_delays_tutorial",
+      "name": "Split Delays",
+      "start": "01:00:29",
+      "end": "01:01:43",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "video_game_preview",
+      "name": "Video Game",
+      "start": "01:01:46",
+      "end": "01:01:51",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "video_game_tutorial",
+      "name": "Video Game",
+      "start": "01:01:51",
+      "end": "01:02:40",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "flanger_delays_preview",
+      "name": "Flanger Delays",
+      "start": "01:02:43",
+      "end": "01:02:48",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "flanger_delays_tutorial",
+      "name": "Flanger Delays",
+      "start": "01:02:48",
+      "end": "01:04:08",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "open_stutter_preview",
+      "name": "Open Stutter",
+      "start": "01:04:11",
+      "end": "01:04:16",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "open_stutter_tutorial",
+      "name": "Open Stutter",
+      "start": "01:04:16",
+      "end": "01:05:16",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "nice_delay_preview",
+      "name": "Nice Delay",
+      "start": "01:05:19",
+      "end": "01:05:24",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "nice_delay_tutorial",
+      "name": "Nice Delay",
+      "start": "01:05:24",
+      "end": "01:06:32",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "disenchanted_preview",
+      "name": "Disenchanted",
+      "start": "01:06:35",
+      "end": "01:06:40",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "disenchanted_tutorial",
+      "name": "Disenchanted",
+      "start": "01:06:40",
+      "end": "01:07:42",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "tails_preview",
+      "name": "Tails",
+      "start": "01:07:45",
+      "end": "01:07:50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "tails_tutorial",
+      "name": "Tails",
+      "start": "01:07:50",
+      "end": "01:09:50",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "telephone_preview",
+      "name": "Telephone",
+      "start": "01:09:53",
+      "end": "01:09:58",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "telephone_tutorial",
+      "name": "Telephone",
+      "start": "01:09:58",
+      "end": "01:11:00",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "glitches_preview",
+      "name": "Glitches",
+      "start": "01:11:03",
+      "end": "01:11:08",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "glitches_tutorial",
+      "name": "Glitches",
+      "start": "01:11:08",
+      "end": "01:13:14",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "radio_preview",
+      "name": "Radio",
+      "start": "01:13:17",
+      "end": "01:13:22",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "radio_tutorial",
+      "name": "Radio",
+      "start": "01:13:22",
+      "end": "01:14:14",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "broken_game_preview",
+      "name": "Broken Game",
+      "start": "01:14:17",
+      "end": "01:14:22",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "broken_game_tutorial",
+      "name": "Broken Game",
+      "start": "01:14:22",
+      "end": "01:15:20",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "movements_preview",
+      "name": "Movements",
+      "start": "01:15:23",
+      "end": "01:15:28",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "movements_tutorial",
+      "name": "Movements",
+      "start": "01:15:28",
+      "end": "01:17:16",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "slowed_and_reverb_preview",
+      "name": "Slowed & Reverb",
+      "start": "01:17:19",
+      "end": "01:17:24",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "slowed_and_reverb_tutorial",
+      "name": "Slowed & Reverb",
+      "start": "01:17:24",
+      "end": "01:18:34",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "tape_stop_preview",
+      "name": "Tape Stop",
+      "start": "01:18:37",
+      "end": "01:18:42",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "tape_stop_tutorial",
+      "name": "Tape Stop",
+      "start": "01:18:42",
+      "end": "01:19:44",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "lfo_vibes_preview",
+      "name": "LFO Vibes",
+      "start": "01:19:47",
+      "end": "01:19:52",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "lfo_vibes_tutorial",
+      "name": "LFO Vibes",
+      "start": "01:19:52",
+      "end": "01:21:09",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "specter_preview",
+      "name": "Specter",
+      "start": "01:21:12",
+      "end": "01:21:17",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "specter_tutorial",
+      "name": "Specter",
+      "start": "01:21:17",
+      "end": "01:22:24",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "crush_transition_preview",
+      "name": "Crush Transition",
+      "start": "01:22:27",
+      "end": "01:22:32",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "crush_transition_tutorial",
+      "name": "Crush Transition",
+      "start": "01:22:32",
+      "end": "01:23:37",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "intro_suspense_preview",
+      "name": "Intro Suspense",
+      "start": "01:23:40",
+      "end": "01:23:45",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "intro_suspense_tutorial",
+      "name": "Intro Suspense",
+      "start": "01:23:45",
+      "end": "01:25:17",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "build_up_preview",
+      "name": "Build Up",
+      "start": "01:25:20",
+      "end": "01:25:25",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "build_up_tutorial",
+      "name": "Build Up",
+      "start": "01:25:25",
+      "end": "01:26:29",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "shifty_transition_preview",
+      "name": "Shifty Transition",
+      "start": "01:26:32",
+      "end": "01:26:37",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "shifty_transition_tutorial",
+      "name": "Shifty Transition",
+      "start": "01:26:37",
+      "end": "01:27:41",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "dj_preview",
+      "name": "DJ",
+      "start": "01:27:44",
+      "end": "01:27:49",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "dj_tutorial",
+      "name": "DJ",
+      "start": "01:27:49",
+      "end": "01:29:04",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "rev_pitch_preview",
+      "name": "Rev Pitch",
+      "start": "01:29:07",
+      "end": "01:29:12",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "rev_pitch_tutorial",
+      "name": "Rev Pitch",
+      "start": "01:29:12",
+      "end": "01:30:14",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "autobots_preview",
+      "name": "Autobots",
+      "start": "01:30:17",
+      "end": "01:30:22",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "autobots_tutorial",
+      "name": "Autobots",
+      "start": "01:30:22",
+      "end": "01:31:07",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "sweepy_preview",
+      "name": "Sweepy",
+      "start": "01:31:10",
+      "end": "01:31:15",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "sweepy_tutorial",
+      "name": "Sweepy",
+      "start": "01:31:15",
+      "end": "01:32:46",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "ez_risers_preview",
+      "name": "EZ Risers",
+      "start": "01:32:49",
+      "end": "01:32:54",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "ez_risers_tutorial",
+      "name": "EZ Risers",
+      "start": "01:32:54",
+      "end": "01:33:51",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "subby_transition_preview",
+      "name": "Subby Transition",
+      "start": "01:33:54",
+      "end": "01:33:59",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "subby_transition_tutorial",
+      "name": "Subby Transition",
+      "start": "01:33:59",
+      "end": "01:35:10",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "cut_transition_preview",
+      "name": "Cut Transition",
+      "start": "01:35:13",
+      "end": "01:35:18",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "cut_transition_tutorial",
+      "name": "Cut Transition",
+      "start": "01:35:18",
+      "end": "01:36:19",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "rev_transition_preview",
+      "name": "Rev Transition",
+      "start": "01:36:22",
+      "end": "01:36:27",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "rev_transition_tutorial",
+      "name": "Rev Transition",
+      "start": "01:36:27",
+      "end": "01:37:15",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "cut_and_move_preview",
+      "name": "Cut & Move",
+      "start": "01:37:18",
+      "end": "01:37:23",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "cut_and_move_tutorial",
+      "name": "Cut & Move",
+      "start": "01:37:23",
+      "end": "01:38:25",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "tran_flange_preview",
+      "name": "Tran Flange",
+      "start": "01:38:28",
+      "end": "01:38:33",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "tran_flange_tutorial",
+      "name": "Tran Flange",
+      "start": "01:38:33",
+      "end": "01:39:41",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "slow_down_preview",
+      "name": "Slow Down",
+      "start": "01:39:44",
+      "end": "01:39:49",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "slow_down_tutorial",
+      "name": "Slow Down",
+      "start": "01:39:49",
+      "end": "01:40:59",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "one_at_a_time_preview",
+      "name": "One At A Time",
+      "start": "01:41:02",
+      "end": "01:41:07",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "one_at_a_time_tutorial",
+      "name": "One At A Time",
+      "start": "01:41:07",
+      "end": "01:41:48",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "get_gated_preview",
+      "name": "Get Gated",
+      "start": "01:41:51",
+      "end": "01:41:56",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "get_gated_tutorial",
+      "name": "Get Gated",
+      "start": "01:41:56",
+      "end": "01:43:01",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "foley_fun_preview",
+      "name": "Foley Fun",
+      "start": "01:43:04",
+      "end": "01:43:09",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "foley_fun_tutorial",
+      "name": "Foley Fun",
+      "start": "01:43:09",
+      "end": "01:44:30",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "lead_bounce_preview",
+      "name": "Lead Bounce",
+      "start": "01:44:33",
+      "end": "01:44:38",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "lead_bounce_tutorial",
+      "name": "Lead Bounce",
+      "start": "01:44:38",
+      "end": "01:45:42",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "oneshot_bonanza_preview",
+      "name": "Oneshot Bonanza",
+      "start": "01:45:45",
+      "end": "01:45:50",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "oneshot_bonanza_tutorial",
+      "name": "Oneshot Bonanza",
+      "start": "01:45:50",
+      "end": "01:46:38",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "club_toilet_preview",
+      "name": "Club Toilet",
+      "start": "01:46:41",
+      "end": "01:46:46",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "club_toilet_tutorial",
+      "name": "Club Toilet",
+      "start": "01:46:46",
+      "end": "01:47:16",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "low_and_slow_preview",
+      "name": "Low & Slow",
+      "start": "01:47:19",
+      "end": "01:47:24",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "low_and_slow_tutorial",
+      "name": "Low & Slow",
+      "start": "01:47:24",
+      "end": "01:48:08",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "ona_preview",
+      "name": "ONA",
+      "start": "01:48:11",
+      "end": "01:48:16",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "ona_tutorial",
+      "name": "ONA",
+      "start": "01:48:16",
+      "end": "01:49:07",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "re_resampled_preview",
+      "name": "Re-Resampled",
+      "start": "01:49:10",
+      "end": "01:49:15",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "re_resampled_tutorial",
+      "name": "Re-Resampled",
+      "start": "01:49:15",
+      "end": "01:50:56",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "voice_gate_preview",
+      "name": "Voice Gate",
+      "start": "01:50:59",
+      "end": "01:51:04",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "voice_gate_tutorial",
+      "name": "Voice Gate",
+      "start": "01:51:04",
+      "end": "01:51:39",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "trip_preview",
+      "name": "Trip",
+      "start": "01:51:42",
+      "end": "01:51:47",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "trip_tutorial",
+      "name": "Trip",
+      "start": "01:51:47",
+      "end": "01:52:21",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "counter_melody_preview",
+      "name": "Counter Melody",
+      "start": "01:52:24",
+      "end": "01:52:29",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "counter_melody_tutorial",
+      "name": "Counter Melody",
+      "start": "01:52:29",
+      "end": "01:53:23",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "vocal_repeat_preview",
+      "name": "Vocal Repeat",
+      "start": "01:53:26",
+      "end": "01:53:31",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "vocal_repeat_tutorial",
+      "name": "Vocal Repeat",
+      "start": "01:53:31",
+      "end": "01:54:00",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "drum_extraction_preview",
+      "name": "Drum Extraction",
+      "start": "01:54:03",
+      "end": "01:54:08",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "drum_extraction_tutorial",
+      "name": "Drum Extraction",
+      "start": "01:54:08",
+      "end": "01:54:56",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "granulator_3_preview",
+      "name": "Granulator 3",
+      "start": "01:54:59",
+      "end": "01:55:04",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "granulator_3_tutorial",
+      "name": "Granulator 3",
+      "start": "01:55:04",
+      "end": "01:56:08",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "melody_repeater_preview",
+      "name": "Melody Repeater",
+      "start": "01:56:11",
+      "end": "01:56:16",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "melody_repeater_tutorial",
+      "name": "Melody Repeater",
+      "start": "01:56:16",
+      "end": "01:56:53",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "ableton_ez_stuts_preview",
+      "name": "Ableton EZ Stuts",
+      "start": "01:56:56",
+      "end": "01:57:01",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "ableton_ez_stuts_tutorial",
+      "name": "Ableton EZ Stuts",
+      "start": "01:57:01",
+      "end": "01:57:34",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "ez_chops_preview",
+      "name": "EZ Chops",
+      "start": "01:57:37",
+      "end": "01:57:42",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "ez_chops_tutorial",
+      "name": "EZ Chops",
+      "start": "01:57:42",
+      "end": "01:58:18",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "ez_chops_plus_preview",
+      "name": "EZ Chops+",
+      "start": "01:58:21",
+      "end": "01:58:26",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "ez_chops_plus_tutorial",
+      "name": "EZ Chops+",
+      "start": "01:58:26",
+      "end": "01:59:01",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "evolving_tremelo_preview",
+      "name": "Evolving Tremelo",
+      "start": "01:59:04",
+      "end": "01:59:09",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "evolving_tremelo_tutorial",
+      "name": "Evolving Tremelo",
+      "start": "01:59:09",
+      "end": "02:00:23",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "ping_pong_ball_preview",
+      "name": "Ping Pong Ball",
+      "start": "02:00:26",
+      "end": "02:00:31",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "ping_pong_ball_tutorial",
+      "name": "Ping Pong Ball",
+      "start": "02:00:31",
+      "end": "02:01:59",
+      "video": true,
+      "audio": false
+    },
+    {
+      "filename": "sample_offset_preview",
+      "name": "Sample Offset",
+      "start": "02:02:02",
+      "end": "02:02:07",
+      "video": false,
+      "audio": true
+    },
+    {
+      "filename": "sample_offset_tutorial",
+      "name": "Sample Offset",
+      "start": "02:02:07",
+      "end": "02:03:32.46",
+      "video": true,
+      "audio": false
+    }
+  ]
+}
