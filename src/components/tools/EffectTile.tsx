@@ -98,7 +98,7 @@ export function EffectTile({
   onTutorial,
 }: EffectTileProps) {
   const Icon = effectIcons[effect.icon];
-  const cardRef = useRef<HTMLElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ rx: 0, ry: 0, px: 50, py: 40 });
   const [hovering, setHovering] = useState(false);
 
@@ -138,12 +138,12 @@ export function EffectTile({
       className="relative aspect-square h-full w-full perspective-[900px]"
       style={{ zIndex: hovering || playing ? 20 : 1 }}
     >
-      <article
+      <div
         ref={cardRef}
         onPointerEnter={() => setHovering(true)}
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
-        className="group relative flex h-full w-full flex-col bg-zinc-950 will-change-transform"
+        className="group relative flex h-full w-full cursor-pointer flex-col bg-zinc-950 will-change-transform"
         style={{
           boxShadow: hovering ? hoverGlow : playing ? playGlow : restGlow,
           transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(${hovering ? 12 : 0}px)`,
@@ -171,8 +171,12 @@ export function EffectTile({
         <div
           className={`relative flex h-full min-h-0 flex-1 flex-col ${playing ? "animate-preview-scale" : ""}`}
         >
-          <div
-            className="relative flex min-h-0 flex-1 flex-col items-center justify-center px-2 text-center"
+          <button
+            type="button"
+            onClick={onPreview}
+            aria-pressed={playing}
+            aria-label={`${effect.name}, ${playing ? "stop preview" : "preview"}`}
+            className="relative flex min-h-0 flex-1 cursor-pointer flex-col items-center justify-center px-2 text-center"
             style={{ transform: "translateZ(20px)" }}
           >
             <div
@@ -206,7 +210,7 @@ export function EffectTile({
             >
               {effect.name}
             </h3>
-          </div>
+          </button>
 
           <div
             className="relative grid grid-cols-2 border-t border-white/10"
@@ -214,32 +218,38 @@ export function EffectTile({
           >
             <button
               type="button"
-              onClick={onPreview}
+              onClick={(event) => {
+                event.stopPropagation();
+                onPreview();
+              }}
               aria-pressed={playing}
-              className={`inline-flex items-center justify-center gap-1 border-r border-white/10 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] transition-colors sm:py-2 sm:text-[11px] ${
+              aria-label={playing ? "Stop preview" : "Preview"}
+              className={`inline-flex cursor-pointer items-center justify-center border-r border-white/10 py-2 transition-colors sm:py-2.5 ${
                 playing
                   ? "bg-white text-black"
                   : "text-zinc-300 hover:bg-white hover:text-black"
               }`}
             >
               {playing ? (
-                <Pause className="h-3 w-3" strokeWidth={2} />
+                <Pause className="h-3.5 w-3.5" strokeWidth={2} />
               ) : (
-                <Play className="h-3 w-3" strokeWidth={2} />
+                <Play className="h-3.5 w-3.5" strokeWidth={2} />
               )}
-              {playing ? "Stop" : "Preview"}
             </button>
             <button
               type="button"
-              onClick={onTutorial}
-              className="inline-flex items-center justify-center gap-1 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-300 transition-colors hover:bg-white hover:text-black sm:py-2 sm:text-[11px]"
+              onClick={(event) => {
+                event.stopPropagation();
+                onTutorial();
+              }}
+              aria-label="Tutorial"
+              className="inline-flex cursor-pointer items-center justify-center py-2 text-zinc-300 transition-colors hover:bg-white hover:text-black sm:py-2.5"
             >
-              <Video className="h-3 w-3" strokeWidth={2} />
-              Tutorial
+              <Video className="h-3.5 w-3.5" strokeWidth={2} />
             </button>
           </div>
         </div>
-      </article>
+      </div>
     </div>
   );
 }
