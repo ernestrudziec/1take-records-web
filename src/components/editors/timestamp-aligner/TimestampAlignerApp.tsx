@@ -294,14 +294,21 @@ export function TimestampAlignerApp() {
   );
 
   const playRange = useCallback(
-    (kind: "preview" | "explanation") => {
-      if (!selected) return;
-      const range = marks[selected.id]?.[kind];
-      if (!isRangeComplete(range) || range.start === null || range.end === null) return;
-      setStatus(`Loop ${kind}: ${formatClock(range.start)} → ${formatClock(range.end)}`);
-      playFrom(range.start, range.end);
+    (kind: "preview" | "explanation", index = selectedIndexRef.current) => {
+      const cue = cuesRef.current[index];
+      if (!cue) return;
+      const range = marksRef.current[cue.id]?.[kind];
+      if (!range || range.start === null) return;
+      setSelectedIndex(index);
+      const end = range.end !== null && range.end > range.start ? range.end : null;
+      setStatus(
+        end
+          ? `Play ${kind}: ${formatClock(range.start)} → ${formatClock(end)}`
+          : `Play ${kind}: ${formatClock(range.start)}`,
+      );
+      playFrom(range.start, end);
     },
-    [marks, playFrom, selected],
+    [playFrom],
   );
 
   const selectCue = useCallback(

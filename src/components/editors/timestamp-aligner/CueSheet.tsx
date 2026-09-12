@@ -21,7 +21,7 @@ type CueSheetProps = {
   onSeekMark: (time: number) => void;
   onClear: (field: MarkField) => void;
   onNotes: (value: string) => void;
-  onPlayRange: (kind: "preview" | "explanation") => void;
+  onPlayRange: (kind: "preview" | "explanation", index?: number) => void;
   onOutputs: (kind: "preview" | "explanation", key: "video" | "audio", value: boolean) => void;
 };
 
@@ -160,6 +160,7 @@ export function CueSheet({
                       onStamp("preview-start", index);
                     }}
                     onSeek={onSeekMark}
+                    onPlay={() => onPlayRange("preview", index)}
                   />
                   <StampCell
                     value={mark.preview.end}
@@ -337,11 +338,13 @@ function StampCell({
   complete,
   onStamp,
   onSeek,
+  onPlay,
 }: {
   value: number | null;
   complete: boolean;
   onStamp: () => void;
   onSeek: (time: number) => void;
+  onPlay?: () => void;
 }) {
   return (
     <td className="px-1 py-1">
@@ -351,6 +354,10 @@ function StampCell({
           event.stopPropagation();
           if (event.shiftKey) {
             onStamp();
+            return;
+          }
+          if (onPlay && value !== null) {
+            onPlay();
             return;
           }
           if (value !== null) onSeek(value);
@@ -363,7 +370,11 @@ function StampCell({
               ? "text-white"
               : "text-zinc-300"
         }`}
-        title="Klik: skok do czasu · Shift+klik: set z playhead"
+        title={
+          onPlay
+            ? "Klik: odtwórz preview · Shift+klik: set z playhead"
+            : "Klik: skok do czasu · Shift+klik: set z playhead"
+        }
       >
         {formatClock(value)}
       </button>
