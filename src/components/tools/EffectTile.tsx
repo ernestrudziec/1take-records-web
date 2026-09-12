@@ -221,7 +221,7 @@ export function EffectTile({
         onPointerEnter={() => setHovering(true)}
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
-        className="group relative flex h-full w-full cursor-pointer flex-col bg-zinc-950 will-change-transform"
+        className="group relative flex h-full w-full cursor-pointer flex-col overflow-hidden bg-zinc-950 will-change-transform"
         style={{
           boxShadow: playing ? playGlow : hovering ? hoverGlow : undefined,
           transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(${hovering ? 12 : 0}px)`,
@@ -268,12 +268,12 @@ export function EffectTile({
             >
               <GradientIcon
                 icon={Icon}
-                gradientId={`effect-icon-${effect.slug}`}
+                gradientId={`effect-icon-${effect.category}-${effect.slug}`}
                 stops={effect.stops}
               />
             </div>
             <h3
-              className="mt-1.5 text-[11px] font-semibold leading-tight text-transparent sm:mt-2 sm:text-sm"
+              className="mt-1.5 line-clamp-2 max-w-full px-1 text-[11px] font-semibold leading-tight text-transparent sm:mt-2 sm:text-sm"
               style={{
                 backgroundImage: `linear-gradient(135deg, ${effect.stops[0]}, ${effect.stops[1]}, ${effect.stops[2]})`,
                 backgroundClip: "text",

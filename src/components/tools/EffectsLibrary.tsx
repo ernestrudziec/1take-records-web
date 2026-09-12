@@ -68,11 +68,17 @@ export function EffectsLibrary() {
             </Link>
           </div>
 
-          <div className="flex min-h-0 flex-1 items-center justify-center overflow-visible">
+          <div
+            className={`min-h-0 flex-1 ${
+              activeCategory === "general"
+                ? "overflow-x-hidden overflow-y-auto"
+                : "flex items-center justify-center overflow-visible"
+            }`}
+          >
             <div
               className={
                 activeCategory === "general"
-                  ? "grid w-[min(100vw,calc((100dvh-2.5rem-95px)*5/20+20px))] grid-cols-5 grid-rows-20 gap-[5px] lg:w-[min(100vw,calc(100dvh-2.5rem))] lg:grid-cols-10 lg:grid-rows-10"
+                  ? "mx-auto grid w-[min(100vw,calc((100dvh-2.5rem-30px)*5/7+20px))] grid-cols-5 gap-[5px] pb-3 lg:w-[min(100vw,calc((100dvh-2.5rem-20px)*7/5+30px))] lg:grid-cols-7"
                   : "grid w-[min(100vw,calc((100dvh-2.5rem-30px)*5/7+20px))] grid-cols-5 grid-rows-7 gap-[5px] lg:w-[min(100vw,calc((100dvh-2.5rem-20px)*7/5+30px))] lg:grid-cols-7 lg:grid-rows-5"
               }
             >
